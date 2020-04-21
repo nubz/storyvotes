@@ -1,13 +1,349 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+  --color-background: #31037D;
+  --axis-x: 1px;
+  --axis-y: 1rem;
+  --delay: 10;
+  --color-black: #000;
+  --color-white: #fff;
+  --color-orange: #D49C3D;
+  --color-red: #D14B3D;
+  --color-violet: #CF52EB;
+  --color-blue: #44A3F7;
+  --color-green: #5ACB3C;
+  --color-yellow: #DEBF40;
+  --color-foreground: var(--color-white);
+  --font-name: Righteous;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: white;
+  font-family: 'Roboto', Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+#root {
+  overflow-x: hidden;
+  background-image: url("/assets/images/bg.jpg");
+  background-attachment: fixed;
+  background-size: cover;
+  min-height: 100vh;
+  color: white;
+  font-family: 'Roboto', Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+#root .ui.container {
+  margin: 4em 0;
+  background-color: transparent;
+}
+
+#root .ui.container.page {
+  padding: 5px;
+}
+
+@media only screen and (min-width: 992px) {
+  #root .ui.container.page {
+    padding: 2em 1em;
+  }
+}
+
+#root .ui.segment {
+  background-color: transparent;
+}
+
+.navbar {
+  max-height: 4em;
+  position: fixed;
+  width: 100vw;
+  top: 0;
+  height: 50px;
+  z-index: 1000;
+  background: rgba(0,0,0,0.6);
+}
+
+a.logo {
+  font-family: 'Faster One', cursive;
+  font-size: 36px;
+  margin-top: 10px;
+  color: #fbbd08;
+}
+
+#root .navbar .ui.container {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 12px 10px;
+}
+
+#root .ui.header {
+  color: white;
+}
+
+#root .ui.menu {
+  text-align: left;
+}
+
+#root .ui.radio label {
+  color: white;
+}
+
+#root .ui.primary.button {
+  background-color: #fbbd08;
+  color: black;
+}
+
+#root .ui.card, #root .ui.cards>.card {
+  background: rgba(0,0,0,0.3);
+}
+
+#root .ui.card>.content>.header, #root .ui.cards>.card>.content>.header,
+#root .ui.card .meta, #root .ui.cards>.card .meta,
+#root .ui.card>.content>.header+.description,
+#root .ui.card>.content>.meta+.description,
+#root .ui.cards>.card>.content>.header+.description,
+#root .ui.cards>.card>.content>.meta+.description,
+#root .ui.statistic>.value, #root .ui.statistics .statistic>.value,
+#root h1, #root h2, #root h3, #root h4, #root h5 {
+  color: white;
+  font-family: 'Roboto', Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+#root h1{
+  font-size: 24px;
+}
+
+#root h2 {
+  font-size: 19px;
+}
+
+#root .ui.statistic>.label, #root .ui.statistics .statistic>.label {
+  color: #fbbd08;
+}
+
+#root .ui.statistics>.statistic {
+  background: rgba(0,0,0,0.5);
+}
+
+main {
+  padding: 2em;
+}
+
+#root .ui.menu {
+  background-color: darkslategray;
+  color: white;
+}
+
+.bm-burger-button {
+  position: fixed;
+  width: 30px;
+  height: 24px;
+  right: 35px;
+  top: 10px;
+}
+
+.bm-burger-bars {
+  background: #ffffff;
+}
+
+.bm-cross-button {
+  height: 24px;
+  width: 24px;
+}
+
+.bm-cross {
+  background: #bdc3c7;
+}
+
+.bm-menu {
+  background: rgba(0,0,0,0.8);
+  padding: 2.5em 1.5em 0;
+  font-size: 1.15em;
+}
+
+.bm-morph-shape {
+  fill: #373a47;
+}
+
+.bm-item-list {
+  color: #b8b7ad;
+}
+
+.bm-overlay {
+  background: rgba(0, 0, 0, 0.3);
+  left: 0;
+}
+
+.bm-item {
+  display: inline-block;
+  text-decoration: none;
+  margin-bottom: 10px;
+  color: #d1d1d1;
+  transition: color 0.2s;
+}
+
+.bm-item:focus {
+  outline: none;
+}
+
+.bm-item:hover {
+  color: white;
+}
+
+.footer-menu.ui.labeled.icon.menu {
+  text-align: left;
+  justify-content: left;
+}
+
+.footer-item {
+  max-width: 4em;
+  font-size: 1.5em;
+  border-right: 1px solid rgba(255,255,255,0.2)
+}
+
+.questionForm .input {
+  width: 100%;
+  display: block;
+}
+
+.ui.button.quizAnswer {
+  margin-bottom: 1em;
+  display: block;
+  text-align: left;
+  background: #fbbd08;
+  color: black;
+}
+
+.ui.button.quizAnswer:hover {
+  background: #ebcd00;
+}
+
+.response {
+  font-size: 120%;
+  padding: 2em 0;
+}
+
+.response.correct, .response.correct > h1 {
+  color: greenyellow;
+}
+
+.response.wrong, .response.wrong > h1 {
+  color: red;
+}
+
+.avatarImage {
+  border-radius: 50%;
+}
+
+.avatarImage.tiny {
+  height: 60px;
+  width: 60px;
+}
+
+.avatarImage.mini {
+  height: 90px;
+  width: 90px;
+}
+
+#root .winners {
+  text-align: center;
+  padding-top: 2em;
+}
+
+#root .winners > h2 {
+  margin-bottom: 1em;
+}
+
+.winner-anim {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  position: relative;
+}
+
+.c-rainbow {
+  counter-reset: rainbow;
+  position: relative;
+  display: block;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.c-rainbow__layer {
+  --text-color: var(--color-foreground);
+  counter-increment: rainbow;
+  font-size: 3rem;
+  color: var(--text-color);
+  text-shadow: -1px -1px 0 var(--color-black), 1px -1px 0 var(--color-black), -1px 1px 0 var(--color-black), 1px 1px 0 var(--color-black), 4px 4px 0 rgba(0, 0, 0, 0.2);
+  animation: rainbow 1.5s ease-in-out infinite;
+}
+.c-rainbow__layer:nth-child(1) {
+  animation-delay: calc( 1 / var(--delay) * 1s);
+  left: calc(var(--axis-x) * 1);
+  z-index: -10;
+}
+.c-rainbow__layer:nth-child(2) {
+  animation-delay: calc( 2 / var(--delay) * 1s);
+  left: calc(var(--axis-x) * 2);
+  z-index: -20;
+}
+.c-rainbow__layer:nth-child(3) {
+  animation-delay: calc( 3 / var(--delay) * 1s);
+  left: calc(var(--axis-x) * 3);
+  z-index: -30;
+}
+.c-rainbow__layer:nth-child(4) {
+  animation-delay: calc( 4 / var(--delay) * 1s);
+  left: calc(var(--axis-x) * 4);
+  z-index: -40;
+}
+.c-rainbow__layer:nth-child(5) {
+  animation-delay: calc( 5 / var(--delay) * 1s);
+  left: calc(var(--axis-x) * 5);
+  z-index: -50;
+}
+.c-rainbow__layer:nth-child(6) {
+  animation-delay: calc( 6 / var(--delay) * 1s);
+  left: calc(var(--axis-x) * 6);
+  z-index: -60;
+}
+.c-rainbow__layer:nth-child(7) {
+  animation-delay: calc( 7 / var(--delay) * 1s);
+  left: calc(var(--axis-x) * 7);
+  z-index: -70;
+}
+.c-rainbow__layer:not(:first-child) {
+  position: absolute;
+  top: 0;
+}
+.c-rainbow__layer--white {
+  --text-color: var(--color-white);
+}
+.c-rainbow__layer--orange {
+  --text-color: var(--color-orange);
+}
+.c-rainbow__layer--red {
+  --text-color: var(--color-red);
+}
+.c-rainbow__layer--violet {
+  --text-color: var(--color-violet);
+}
+.c-rainbow__layer--blue {
+  --text-color: var(--color-blue);
+}
+.c-rainbow__layer--green {
+  --text-color: var(--color-green);
+}
+.c-rainbow__layer--yellow {
+  --text-color: var(--color-yellow);
+}
+
+@keyframes rainbow {
+  0%, 100% {
+    transform: translatey(var(--axis-y));
+  }
+  50% {
+    transform: translatey(calc(var(--axis-y) * -1));
+  }
 }
