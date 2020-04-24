@@ -1,71 +1,84 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Segment, Card } from 'semantic-ui-react'
+import { Segment, Card, Header, Message } from 'semantic-ui-react'
 import { compose } from 'recompose'
-import { withRouter } from 'react-router-dom'
 import { withFirebase } from '../Firebase'
-import Avatar from '../Avatar'
+import StoryCard from '../StoryCard'
 
 const Landing = props => {
-  const { history, firebase } = props
+  const { firebase } = props
   const [stories, setStories ] = useState([])
+  const [fullStories, setFullStories ] = useState([])
   useEffect(() => {
     const listRef = firebase.db.ref('stories/')
     const listListener = listRef
       .on("value", snapshot => {
         const newStories = []
+        const fullStories = []
         snapshot.forEach(item => {
           const story = item.val()
           story.id = item.key
           const numberJoined = story.joined ? Object.keys(story.joined).length : 0
+          story.numberJoined = numberJoined
           if (story.howManyPlayers > numberJoined) {
-            story.numberJoined = numberJoined
             newStories.push(story)
+          } else {
+            fullStories.push(story)
           }
         })
 
-        setStories(newStories)
+        setStories(newStories.reverse())
+        setFullStories(fullStories.reverse())
       })
 
     return () => {
       listRef.off("value", listListener)
     }
   }, [firebase])
-  const loadStory = id => () => {
-    history.push('vote/' + id);
-  }
 
   return (
     <Segment>
-      <h1>Quizzes you can join</h1>
+      <Header as='h2' dividing>
+        Stories you can vote on
+      </Header>
       {stories.length ?
         <Card.Group>
           {stories.map(s => (
-            <Card key={s.id} color={'black'}>
-              <Card.Content>
-                <div style={{float: 'right'}}>
-                  <Avatar size={'tiny'} id={s.owner} />
-                </div>
-                <Card.Header>{s.name}</Card.Header>
-                <Card.Meta>{s.mode} mode</Card.Meta>
-                <Card.Description>
-                  {s.numberJoined} voters out of {s.howManyPlayers} joined
-                </Card.Description>
-              </Card.Content>
-              <Card.Content extra>
-                <Button primary style={{width: '100%'}} onClick={loadStory(s.id)}>Join</Button>
-              </Card.Content>
-            </Card>
-
+            <StoryCard key={s.id} story={s} canJoin={true} />
           ))}
         </Card.Group>
-        : <h2>No stories to vote on...</h2>}
+        :
+        <Message color={'black'}>
+          <Message.Header>No stories to vote on</Message.Header>
+          <p>
+            When stories are available to vote on, they will appear here. You need to create an account to add stories.
+          </p>
+        </Message>
+      }
+      <Header as='h2' dividing>
+        Stories with all voters registered
+      </Header>
+      {fullStories.length ?
+        <Card.Group>
+          {fullStories.map(s => (
+            <StoryCard key={s.id} story={s} canJoin={false} />
+          ))}
+        </Card.Group>
+        :
+        <Message color={'black'}>
+          <Message.Header>No stories fully registered</Message.Header>
+          <p>
+            Stories with all voters registered will appear here.
+          </p>
+        </Message>
+
+      }
+
     </Segment>
   );
 }
 
 const StoryList = compose(
-  withFirebase,
-  withRouter
+  withFirebase
 )(Landing);
 
 export default StoryList

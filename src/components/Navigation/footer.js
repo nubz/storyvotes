@@ -9,7 +9,7 @@ const authRoutes = [
     route: 'STORY',
     label: 'Add a story',
     color: 'grey',
-    icon: 'wrench'
+    icon: 'plus circle'
   },
   {
     route: 'ACCOUNT',

@@ -49,7 +49,7 @@ const SignUpAction = props => {
             email: email,
             avatar: avatar
           }).then(() => {
-            history.push(ROUTES.QUIZ);
+            history.push(ROUTES.STORY);
           }), 1000)
       })
       .catch(error => {

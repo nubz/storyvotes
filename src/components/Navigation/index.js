@@ -9,19 +9,28 @@ const authRoutes = [
   {
     route: 'STORY',
     label: 'Add a story',
-    color: 'white'
+    color: 'white',
+    icon: 'plus circle'
+  },
+  {
+    route: 'HOME',
+    label: 'My stories',
+    color: 'white',
+    icon: 'folder open'
   },
   {
     route: 'ACCOUNT',
     label: 'Account',
-    color: 'white'
+    color: 'white',
+    icon: 'user'
   }
 ];
 
 const unAuthRoutes = [
   {
     route: 'SIGN_IN',
-    label: 'Sign in'
+    label: 'Sign in',
+    icon: 'lock'
   }
 ];
 
@@ -34,7 +43,7 @@ const NavigationBar = props => {
       <SideBar authUser={authUser} routes={routes} />
       <Container>
         <Link className={'logo'} to={ROUTES.LANDING}>
-          Quizzy
+          StoryVotes
         </Link>
       </Container>
     </div>

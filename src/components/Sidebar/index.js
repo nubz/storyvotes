@@ -4,6 +4,7 @@ import * as ROUTES from '../../constants/routes'
 import { Link } from 'react-router-dom'
 import SignOutButton from '../SignOut'
 import Avatar from '../Avatar'
+import { Icon } from 'semantic-ui-react'
 
 const SidebarContext = React.createContext();
 
@@ -39,6 +40,7 @@ const SideBar = props => {
           onClick={ ctx.toggleMenu }
           to={ROUTES[r.route]}
           style={{ color: r.color, marginTop: '1em', paddingBottom: '1em', borderBottom: '1px solid #777'}}>
+          <Icon name={r.icon} />
           {r.label}
         </Link>
       )) : null}

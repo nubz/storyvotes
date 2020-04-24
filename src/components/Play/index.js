@@ -5,7 +5,6 @@ import * as ROUTES from '../../constants/routes';
 import { Link } from 'react-router-dom';
 import Utils from '../Utils'
 import Player from '../Player'
-import JoinVote from '../JoinVote'
 import { Container } from 'semantic-ui-react'
 
 const Play = props => {
@@ -17,8 +16,8 @@ const Play = props => {
   const storyPath = "stories/" + storyId
   const submissionsPath = "submissions/" + storyId
   useEffect(() => {
-    const quizRef = firebase.db.ref(storyPath);
-    const quizListener = quizRef
+    const storyRef = firebase.db.ref(storyPath);
+    const storyListener = storyRef
       .on("value", snapshot => {
         const s = snapshot.val();
         setPlayers(Utils.firebaseToArray(s.joined))
@@ -32,31 +31,23 @@ const Play = props => {
       })
 
     return () => {
-      quizRef.off("value", quizListener)
+      storyRef.off("value", storyListener)
       submissionsRef.off("value", submissionsListener)
     }
   }, [firebase, storyPath, submissionsPath])
 
-  const waitingForPlayers = story.howManyPlayers - players.length
   return (
     <Container className={'page'}>
       {story ?
-        waitingForPlayers ?
-          <>
-            <h2>We are waiting for {waitingForPlayers} to join {story.name}</h2>
-            <JoinVote
-              storyId={storyId}
-              players={players}
-              storyPath={storyPath}
-              firebase={firebase}/>
-          </>
-          :
-          <Player
-            story={story}
-            players={players}
-            submissions={submissions}
-            submissionsPath={submissionsPath}
-            firebase={firebase}/>
+        <Player
+          storyId={storyId}
+          howManyPlayers={story.howManyPlayers}
+          players={players}
+          storyName={story.name}
+          submissions={submissions}
+          submissionsPath={submissionsPath}
+          firebase={firebase}
+          finished={story.finished}/>
         :
         <p>cannot find that story, <Link to={ROUTES.LANDING}>try again</Link></p>
       }

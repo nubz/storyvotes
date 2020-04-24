@@ -17,31 +17,27 @@ const AccountPage = props => (
 );
 
 const AccountForm = props => {
-  const [ profile, setProfile ] = useState({username: 'Guest', email: 'guest', avatar: ''});
+  const [ profile, setProfile ] = useState({id: '', username: 'Guest', email: 'guest', avatar: ''});
   const { authUser, firebase } = props;
+  const profilePath = 'profiles/' + authUser.uid
   useEffect(() => {
     const profileRef = firebase.db
-      .ref('profiles');
+      .ref(profilePath);
     const profileListener = profileRef
-      .orderByChild('email')
-      .equalTo(authUser.email)
       .on("value", snapshot => {
-        const matches = snapshot.val();
-        for(let item in matches) {
-          const newProfile = matches[item];
-          newProfile.id = item;
-          setProfile(newProfile)
-        }
+        const item = snapshot.val();
+        item.id = item.key
+        setProfile(item)
       });
 
     return () => {
       profileRef.off("value", profileListener)
     }
-  }, [authUser, firebase]);
+  }, [authUser, firebase, profilePath]);
 
-  const handlePhotoUpload = id => (downloadUrl) => {
-    const pRef = firebase.db.ref('profiles');
-    return pRef.child(id).update({avatar: downloadUrl})
+  const handlePhotoUpload = downloadUrl => {
+    const pRef = firebase.db.ref(profilePath);
+    return pRef.update({avatar: downloadUrl})
   };
 
   return (
@@ -50,7 +46,7 @@ const AccountForm = props => {
       {profile.username ? <p>{profile.username}</p> : null}
       <p>Email: {authUser.email}</p>
       <Header as={'h2'}>Change your avatar</Header>
-      <Uploader folder={authUser.email} handler={handlePhotoUpload(profile.id)} />
+      <Uploader folder={authUser.uid} handler={handlePhotoUpload} />
       {profile.avatar ? <Gallery photos={[profile.avatar]} /> : null}
       <Header as={'h2'}>Change your password</Header>
       <PasswordChangeForm />

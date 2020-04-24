@@ -1,96 +1,108 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Statistic } from 'semantic-ui-react'
-import { useCookies } from 'react-cookie';
+import { Button, Icon, Message, Statistic } from 'semantic-ui-react'
+import { useCookies } from 'react-cookie'
+import ScoreBoard from '../ScoreBoard'
+import { Link } from 'react-router-dom'
 
 const Player = props => {
-  const { story, players, submissions, submissionsPath, firebase } = props
+  const {
+    storyId,
+    players,
+    howManyPlayers,
+    storyName,
+    submissions,
+    submissionsPath,
+    firebase,
+    finished
+  } = props
   const [ locked, setLocked ] = useState(false)
-  const [ finished, setFinished ] = useState(false)
   const [ scores, setScores ] = useState([])
   const [ playing, setPlaying ] = useState(false)
   const [ results, setResults ] = useState({})
-  const [cookies] = useCookies([`${story.id}-name`]);
-  useEffect(() => {
-    const getSubmission = player =>
-      submissions && submissions[player]
-    if (players.length) {
-      const updatedScores = players.reduce((list, next) => {
-        const a = {}
-        if (next === cookies[`${storyId}-name`]) {
-          setPlaying(true)
-        }
-        a.name = next
-        a.score = getSubmission(next)
-        list.push(a)
-        return list
-      }, [])
-      setScores(updatedScores)
+  const [cookies] = useCookies([`${storyId}-name`]);
 
-    }
-    if (submissions &&
-      Object.keys(submissions).length === players.length) {
+  useEffect(() => {
+    const getSubmission = player => submissions && submissions[player]
+    setPlaying(players.includes(cookies[`${storyId}-name`]))
+    const updatedScores = players.reduce((list, next) => {
+      const a = {}
+      a.name = next
+      a.score = getSubmission(next)
+      list.push(a)
+      return list
+    }, [])
+    setScores(updatedScores)
+
+    const mode = (arr) => [...new Set(arr)]
+      .map((value) => [value, arr.filter((v) => v === value).length])
+      .sort((a,b) => a[1]-b[1])
+      .reverse()
+      .filter((value, i, a) => a.indexOf(value) === i)
+      .filter((v, i, a) => v[1] === a[0][1])
+      .map((v) => v[0])
+
+    if (submissions && players.length &&
+      Object.keys(submissions).length === howManyPlayers) {
         setTimeout(() => {
             const topPlayers = []
             const lowPlayers = []
-            const topScore = Math.max.apply(null, players.map(getSubmission))
-            const minScore = Math.min.apply(null, players.map(getSubmission))
-            players.forEach(p => {
+            const allScores = players.map(getSubmission)
+            const topScore = Math.max.apply(null, allScores)
+            const minScore = Math.min.apply(null, allScores)
+          players.forEach(p => {
               if(getSubmission(p) === topScore) {
                 topPlayers.push(p)
               } else if (getSubmission(p) === minScore) {
                 lowPlayers.push(p)
               }
             })
-            setResults({high: topPlayers, low: lowPlayers})
-            setFinished(true)
-
+          setResults({high: topPlayers, low: lowPlayers, mostFrequent: mode(allScores) })
+          firebase.db.ref('stories/' + storyId).update({finished: true})
         }, 2000)
     }
-  }, [submissions, players, cookies, playing, storyId])
+  }, [firebase, submissions, cookies, storyId, players, howManyPlayers])
 
   const answer = choice => async () => {
     setLocked(true)
-    if (playing) {
-      const oldSubmissions = submissions || {}
-      const newSubmissions = {...oldSubmissions, [cookies[`${storyId}-name`]]:choice}
-      await firebase.db.ref(submissionsPath + '/' + qIndex).update(newSubmissions)
-    }
+    const oldSubmissions = submissions || {}
+    const newSubmissions = {...oldSubmissions, [cookies[`${storyId}-name`]]:choice}
+    await firebase.db.ref(submissionsPath).update(newSubmissions)
   }
 
   return (
     <>
-      {players.length &&
-        <Statistic.Group inverted widths={players.length}>
-          {scores.map(p => (
-            <Statistic key={p.name}>
-              <Statistic.Value>{p.score}</Statistic.Value>
-              <Statistic.Label>{p.name}</Statistic.Label>
-            </Statistic>
-          ))}
-        </Statistic.Group>
-      }
-
+      <h2 className={'question'}>{storyName}</h2>
+      <ScoreBoard size={'large'} players={players} scores={scores} finished={finished}/>
       {finished ?
-        <>
-          {results && results.high &&
-            <div className={'winners'}>
-              <h1>Voting over</h1>
-              <h2>High voters:</h2>
-              {results.high.map(w => (
-                <div key={w}>
-                  {w}
-                </div>
-                )
-              )}
-            </div>}
-        </>
+        <Message color={'black'}>
+          <Message.Header>Voting over, the scores with most votes:</Message.Header>
+          <div style={{textAlign: 'center'}}>
+            {results && results.mostFrequent &&
+              results.mostFrequent.map(h => (
+                <Statistic size={'huge'} key={`stat-${h}`}>
+                  <Statistic.Value>
+                    {h}
+                  </Statistic.Value>
+                  <Statistic.Label>
+                    Recommended Points
+                  </Statistic.Label>
+                </Statistic>
+              ))
+            }
+          </div>
+          {results && results.high && <p>High voters: {results.high.join(', ')}</p>}
+          {results && results.low && <p>Low voters: {results.low.join(', ')}</p>}
+          <p style={{textAlign: 'center'}}>
+            <Link as={'h2'} style={{color: 'white'}} to={'/'}>Return to start</Link>
+          </p>
+        </Message>
         :
         <>
-          <h2 className={'question'}>{story.name}</h2>
           {!locked ?
             <>
               {playing ?
-                <>
+                <div style={{marginTop: '2em'}}>
+                  <h3>Choose how many points to vote for</h3>
                   <Button className={'quizAnswer'} disabled={locked}
                           onClick={answer(1)}>1</Button>
                   <Button className={'quizAnswer'} disabled={locked}
@@ -123,18 +135,26 @@ const Player = props => {
                           onClick={answer(15)}>15</Button>
                   <Button className={'quizAnswer'} disabled={locked}
                           onClick={answer(16)}>16</Button>
-                  </>
+                  </div>
                 :
-                <>
-                  <p>Voters be voting...</p>
-                </>}
-            </> :
-              <div className={'response'}>
-                <h1>You have voted</h1>
-                <p>Just waiting for everyone to vote...</p>
-              </div>
+                <Message color={'black'} icon>
+                  <Icon name='circle notched' loading />
+                  <Message.Content>
+                    <Message.Header>You are not voting</Message.Header>
+                    Just waiting for everyone to vote...
+                  </Message.Content>
+                </Message>
+              }
+            </>
+            :
+            <Message color={'black'} icon>
+              <Icon name='circle notched' loading />
+              <Message.Content>
+                <Message.Header>You have voted</Message.Header>
+                Just waiting for everyone to vote...
+              </Message.Content>
+            </Message>
           }
-
         </>
       }
     </>

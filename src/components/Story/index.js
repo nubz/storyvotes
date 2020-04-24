@@ -17,8 +17,8 @@ const Story = props => {
       howManyPlayers: howManyPlayers,
       name: storyName
     }
-    const newStory = await firebase.db.ref('stories').push(storyConfig)
-    history.push(`/vote/${newStory.key}`)
+    await firebase.db.ref('stories').push(storyConfig)
+    history.push(`/`)
   }
 
   const onNumberChange = setter => event => {
@@ -33,16 +33,16 @@ const Story = props => {
 
   return (
     <Container className={'page'}>
-      <h1>Set up a quiz:</h1>
+      <h1>Add a story</h1>
       <Form onSubmit={generateStory} style={{marginBottom: '3em'}}>
         <Form.Field>
-          <h3>Name your quiz</h3>
+          <h3>Story name</h3>
           <Input
             name="storyName"
             type="text"
             value={storyName}
             onChange={onTextChange(setStoryName)}
-            placeholder="Quiz name"
+            placeholder="Story name"
           >
             <input autoComplete="off"/>
           </Input>
@@ -60,7 +60,7 @@ const Story = props => {
             <input autoComplete="off"/>
           </Input>
         </Form.Field>
-        <Button disabled={invalidForm} type='submit'>Run quiz</Button>
+        <Button disabled={invalidForm} type='submit'>Add story</Button>
       </Form>
     </Container>
   )

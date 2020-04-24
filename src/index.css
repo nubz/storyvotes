@@ -43,12 +43,6 @@ body {
   padding: 5px;
 }
 
-@media only screen and (min-width: 992px) {
-  #root .ui.container.page {
-    padding: 2em 1em;
-  }
-}
-
 #root .ui.segment {
   background-color: transparent;
 }
@@ -64,7 +58,7 @@ body {
 }
 
 a.logo {
-  font-family: 'Faster One', cursive;
+  font-family: 'Monofett', cursive;
   font-size: 36px;
   margin-top: 10px;
   color: #fbbd08;
@@ -207,11 +201,19 @@ main {
 }
 
 .ui.button.quizAnswer {
-  margin-bottom: 1em;
-  display: block;
-  text-align: left;
+  margin: 1em;
+  display: inline-block;
   background: #fbbd08;
   color: black;
+  min-width: 5em;
+}
+
+.voted {
+  color: greenyellow;
+}
+
+.notVoted {
+  color: #bd081c;
 }
 
 .ui.button.quizAnswer:hover {
@@ -245,105 +247,23 @@ main {
   width: 90px;
 }
 
-#root .winners {
-  text-align: center;
-  padding-top: 2em;
+#root .ui.statistic>.label.mini,
+#root .ui.statistics .statistic>.label.mini {
+  font-size: 0.7rem;
 }
 
-#root .winners > h2 {
-  margin-bottom: 1em;
+#root .ui.card, #root .ui.cards>.card {
+  width: 320px;
 }
 
-.winner-anim {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-  position: relative;
-}
-
-.c-rainbow {
-  counter-reset: rainbow;
-  position: relative;
-  display: block;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.c-rainbow__layer {
-  --text-color: var(--color-foreground);
-  counter-increment: rainbow;
-  font-size: 3rem;
-  color: var(--text-color);
-  text-shadow: -1px -1px 0 var(--color-black), 1px -1px 0 var(--color-black), -1px 1px 0 var(--color-black), 1px 1px 0 var(--color-black), 4px 4px 0 rgba(0, 0, 0, 0.2);
-  animation: rainbow 1.5s ease-in-out infinite;
-}
-.c-rainbow__layer:nth-child(1) {
-  animation-delay: calc( 1 / var(--delay) * 1s);
-  left: calc(var(--axis-x) * 1);
-  z-index: -10;
-}
-.c-rainbow__layer:nth-child(2) {
-  animation-delay: calc( 2 / var(--delay) * 1s);
-  left: calc(var(--axis-x) * 2);
-  z-index: -20;
-}
-.c-rainbow__layer:nth-child(3) {
-  animation-delay: calc( 3 / var(--delay) * 1s);
-  left: calc(var(--axis-x) * 3);
-  z-index: -30;
-}
-.c-rainbow__layer:nth-child(4) {
-  animation-delay: calc( 4 / var(--delay) * 1s);
-  left: calc(var(--axis-x) * 4);
-  z-index: -40;
-}
-.c-rainbow__layer:nth-child(5) {
-  animation-delay: calc( 5 / var(--delay) * 1s);
-  left: calc(var(--axis-x) * 5);
-  z-index: -50;
-}
-.c-rainbow__layer:nth-child(6) {
-  animation-delay: calc( 6 / var(--delay) * 1s);
-  left: calc(var(--axis-x) * 6);
-  z-index: -60;
-}
-.c-rainbow__layer:nth-child(7) {
-  animation-delay: calc( 7 / var(--delay) * 1s);
-  left: calc(var(--axis-x) * 7);
-  z-index: -70;
-}
-.c-rainbow__layer:not(:first-child) {
-  position: absolute;
-  top: 0;
-}
-.c-rainbow__layer--white {
-  --text-color: var(--color-white);
-}
-.c-rainbow__layer--orange {
-  --text-color: var(--color-orange);
-}
-.c-rainbow__layer--red {
-  --text-color: var(--color-red);
-}
-.c-rainbow__layer--violet {
-  --text-color: var(--color-violet);
-}
-.c-rainbow__layer--blue {
-  --text-color: var(--color-blue);
-}
-.c-rainbow__layer--green {
-  --text-color: var(--color-green);
-}
-.c-rainbow__layer--yellow {
-  --text-color: var(--color-yellow);
-}
-
-@keyframes rainbow {
-  0%, 100% {
-    transform: translatey(var(--axis-y));
+@media only screen and (min-width: 992px) {
+  #root .ui.container.page {
+    padding: 2em 1em;
   }
-  50% {
-    transform: translatey(calc(var(--axis-y) * -1));
+}
+
+@media only screen and (max-width: 600px) {
+  #root .ui.card, #root .ui.cards>.card {
+    width: 100%;
   }
 }

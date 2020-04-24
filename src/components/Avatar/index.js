@@ -19,7 +19,7 @@ const Avatar = props => {
     }
   }, [id, firebase])
 
-  const avatarImg = profile.avatar ? profile.avatar : '/assets/images/default-avatar.png'
+  const avatarImg = profile && profile.avatar ? profile.avatar : '/assets/images/default-avatar.png'
 
   return (
     <div
