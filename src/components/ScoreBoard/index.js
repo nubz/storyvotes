@@ -20,31 +20,24 @@ const ScoreBoardBase = props => {
     <div>
       {players.length &&
       <Statistic.Group size={size} inverted widths={players.length}>
-        {finished ?
-          players.map(p => (
-            <Statistic key={p}>
-              <Statistic.Value>
-                {submissions[p]}
-              </Statistic.Value>
-              <Statistic.Label className={size}>
-                {p}
-              </Statistic.Label>
-            </Statistic>
-          ))
-          :
-          players.map(p => (
-            <Statistic key={p}>
-              <Statistic.Value>
+        {players.map(p => (
+          <Statistic key={p}>
+            <Statistic.Value>
+              {finished ?
+                <span className={'finalScore'}>
+                  {submissions[p]}
+                </span>
+                :
                 <span className={hasVoted(p) ? 'voted' : 'notVoted'}>
                   ?
                 </span>
-              </Statistic.Value>
-              <Statistic.Label>
-                {p}
-              </Statistic.Label>
-            </Statistic>
-          ))
-        }
+              }
+            </Statistic.Value>
+            <Statistic.Label className={size}>
+              {p}
+            </Statistic.Label>
+          </Statistic>
+        ))}
       </Statistic.Group>
       }
     </div>
