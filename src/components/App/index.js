@@ -10,6 +10,9 @@ import Home from '../Home';
 import AccountPage from '../Account';
 import Vote from '../Play'
 import Story from '../Story'
+import Team from '../Team'
+import Teams from '../Teams'
+import NewTeam from '../TeamCreate'
 import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
 import { Container } from 'semantic-ui-react'
@@ -28,6 +31,9 @@ const App = () => (
       <Route path={ROUTES.ACCOUNT} component={AccountPage}/>
       <Route path={ROUTES.VOTE} component={Vote}/>
       <Route path={ROUTES.STORY} component={Story}/>
+      <Route exact path={ROUTES.TEAM} component={Team}/>
+      <Route path={ROUTES.NEW_TEAM} component={NewTeam}/>
+      <Route path={ROUTES.TEAMS} component={Teams}/>
     </Container>
     <Footer />
   </Router>

@@ -5,9 +5,10 @@ import { withRouter } from 'react-router-dom'
 import { compose } from 'recompose'
 
 const JoinForm = props => {
-  const { storyId, firebase, players, history } = props
+  const { story, firebase, players, history } = props
+  const cookieName = `${story.id}-name`
   const [nickName, setNickName ] = useState('')
-  const [cookies, setCookie] = useCookies([`${storyId}-name`]);
+  const [cookies, setCookie] = useCookies([cookieName]);
   const onChange = setter => event => {
     setter(event.target.value);
   }
@@ -19,14 +20,14 @@ const JoinForm = props => {
     const uniqueNickName = exists.length ?
       `${nickName}-${players.filter(p => p.startsWith(nickName)).length}` : nickName
     newJoined.push(uniqueNickName)
-    await firebase.db.ref('stories/' + storyId).update({joined: newJoined})
-    setCookie(`${storyId}-name`, uniqueNickName, { path: '/' })
-    history.push(`vote/${storyId}`)
+    setCookie(cookieName, uniqueNickName, { path: '/' })
+    await firebase.db.ref('stories/' + story.teamId + '/' + story.id).update({joined: newJoined})
+    history.push(`/vote/${story.teamId}/${story.id}`)
   }
   return (
     <>
-      {cookies[`${storyId}-name`] ?
-        <h1>You have joined as {cookies[`${storyId}-name`]}</h1>
+      {cookies[cookieName] ?
+        <h1>You have joined as {cookies[cookieName]}</h1>
         :
         <form onSubmit={join}>
           <Input

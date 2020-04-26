@@ -1,24 +1,33 @@
 import { Statistic } from 'semantic-ui-react'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { compose } from 'recompose'
+import { withFirebase } from '../Firebase'
 
-const ScoreBoard = props => {
-  const { players, scores, finished, size } = props
+const ScoreBoardBase = props => {
+  const { storyPath, firebase, players, maxPlayers, submissions, finished, size } = props
+  useEffect(() => {
+    if (!finished && maxPlayers && submissions && maxPlayers === Object.keys(submissions).length) {
+      firebase.db.ref(storyPath)
+        .update({
+          finished: firebase.database.ServerValue.TIMESTAMP
+        })
+    }
+  }, [submissions, maxPlayers, firebase, storyPath, finished])
   const hasVoted = player => {
-    const result = scores.find(s => s.name === player)
-    return result && result.score > 0
+    return submissions && submissions[player]
   }
   return (
     <div>
       {players.length &&
       <Statistic.Group size={size} inverted widths={players.length}>
         {finished ?
-          scores.map(p => (
-            <Statistic key={p.name}>
+          players.map(p => (
+            <Statistic key={p}>
               <Statistic.Value>
-                {p.score}
+                {submissions[p]}
               </Statistic.Value>
               <Statistic.Label className={size}>
-                {p.name}
+                {p}
               </Statistic.Label>
             </Statistic>
           ))
@@ -41,5 +50,9 @@ const ScoreBoard = props => {
     </div>
   )
 }
+
+const ScoreBoard = compose(
+  withFirebase
+)(ScoreBoardBase)
 
 export default ScoreBoard

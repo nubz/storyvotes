@@ -5,30 +5,40 @@ import { withFirebase } from '../Firebase'
 import StoryCard from '../StoryCard'
 import Utils from '../Utils'
 
-const Landing = props => {
+const Team = props => {
   const { firebase } = props
   const [stories, setStories ] = useState([])
+  const [ team, setTeam ] = useState({})
   const [fullStories, setFullStories ] = useState([])
+  const teamId = props.match.params.id;
+  const storyPath = `stories/${teamId}`
+  const teamPath = `teams/${teamId}`
   const teamAccess = Utils.getObj('teamAccess')
+  if (!teamAccess) {
+    Utils.storeObj('teamAccess', [teamId])
+  } else if (teamAccess.length && !teamAccess.includes(teamId)) {
+    Utils.storeObj('teamAccess', [...teamAccess, teamId])
+  }
   useEffect(() => {
-    const listRef = firebase.db.ref('stories/')
+    const teamRef = firebase.db.ref(teamPath)
+    const teamListener = teamRef
+      .on("value", snapshot => {
+        setTeam(snapshot.val())
+      })
+    const listRef = firebase.db.ref(storyPath)
     const listListener = listRef
-
       .on("value", snapshot => {
         const newStories = []
         const fullStories = []
-        snapshot.forEach(childSnapshot => {
-          if (teamAccess && teamAccess.includes(childSnapshot.key)) {
-            const stories = Utils.firebaseToArrayWithKey(childSnapshot.val())
-            stories.forEach(story => {
-              const numberJoined = story.joined ? Object.keys(story.joined).length : 0
-              story.numberJoined = numberJoined
-              if (story.howManyPlayers > numberJoined) {
-                newStories.push(story)
-              } else {
-                fullStories.push(story)
-              }
-            })
+        snapshot.forEach(item => {
+          const story = item.val()
+          story.id = item.key
+          const numberJoined = story.joined ? Object.keys(story.joined).length : 0
+          story.numberJoined = numberJoined
+          if (story.howManyPlayers > numberJoined) {
+            newStories.push(story)
+          } else {
+            fullStories.push(story)
           }
         })
 
@@ -38,13 +48,14 @@ const Landing = props => {
 
     return () => {
       listRef.off("value", listListener)
+      teamRef.off("value", teamListener)
     }
-  }, [firebase, teamAccess])
+  }, [firebase, storyPath, teamPath])
 
   return (
     <Segment>
       <Header as='h2' dividing>
-        Stories from all teams you have access to
+        Stories from {team.name}
       </Header>
       {stories.length ?
         <Card.Group>
@@ -56,7 +67,7 @@ const Landing = props => {
         <Message color={'black'}>
           <Message.Header>No stories to vote on</Message.Header>
           <p>
-            When stories are available to vote on in the teams you have access to, they will appear here. You need to create an account to add stories.
+            When stories from this team are available to vote on, they will appear here. You need to create an account to add stories.
           </p>
         </Message>
       }
@@ -73,7 +84,7 @@ const Landing = props => {
         <Message color={'black'}>
           <Message.Header>No stories fully registered</Message.Header>
           <p>
-            Stories with all voters registered will appear here.
+            Stories from this team with all voters registered will appear here.
           </p>
         </Message>
 
@@ -83,8 +94,8 @@ const Landing = props => {
   );
 }
 
-const StoryList = compose(
+const TeamStories = compose(
   withFirebase
-)(Landing);
+)(Team);
 
-export default StoryList
+export default TeamStories

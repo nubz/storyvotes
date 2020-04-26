@@ -20,10 +20,18 @@ const HomePage = props => {
   useEffect(() => {
     const storyListRef = firebase.db.ref('stories/')
     const storyListener = storyListRef
-      .orderByChild('owner')
-      .equalTo(authUser.uid)
       .on("value", snapshot => {
-        setMyStories(Utils.firebaseToArrayWithKey(snapshot.val()))
+        const myTeamStories = []
+        snapshot.forEach(childSnapshot => {
+          const teamStories = Utils.firebaseToArrayWithKey(childSnapshot.val())
+          teamStories.forEach(story => {
+            if (story.owner === authUser.uid) {
+              myTeamStories.push(story)
+            }
+          })
+        })
+
+        setMyStories(myTeamStories)
       })
 
     return () => {
@@ -31,12 +39,17 @@ const HomePage = props => {
     }
   }, [ authUser, firebase ])
 
-  const removeStory = id => () => {
+  const removeStory = (teamId, id) => () => {
     firebase.db
-      .ref('stories/')
+      .ref('stories/' + teamId)
       .child(id)
       .remove()
-      .then(() => console.log('removed ' + id), err => console.error(err))
+      .then(
+        () => firebase.db
+          .ref('submissions/')
+          .child(id)
+          .remove()
+          .then(() => console.log('removed all submissions'), err => console.error(err)), err => console.error(err))
   }
 
   return (
@@ -46,14 +59,14 @@ const HomePage = props => {
         {myStories.length ?
           <List divided relaxed inverted>
             {
-              myStories.map(q => (
-                <List.Item key={q.id}>
+              myStories.map(story => (
+                <List.Item key={story.id}>
                   <List.Content floated='right'>
-                    <Button size={'mini'} onClick={removeStory(q.id)}>Delete</Button>
+                    <Button size={'mini'} onClick={removeStory(story.teamId, story.id)}>Delete</Button>
                   </List.Content>
                   <List.Icon name='file outline' size='large' verticalAlign='middle' />
                   <List.Content>
-                    <List.Header>{q.name}</List.Header>
+                    <List.Header>{story.name}</List.Header>
                   </List.Content>
                 </List.Item>
               ))

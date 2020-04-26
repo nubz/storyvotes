@@ -132,6 +132,15 @@ const firebaseToArrayWithKey = obj => {
   return obj ? Object.keys(obj).map(k => { return {...obj[k], id: k}}) : [];
 }
 
+const storeObj = (key, obj) => {
+  localStorage.setItem(key, JSON.stringify(obj));
+}
+
+const getObj = key => {
+  const retrievedObject = localStorage.getItem(key);
+  return JSON.parse(retrievedObject)
+}
+
 export default {
   friendlyDate: friendlyDate,
   goldCoins: goldCoins,
@@ -143,5 +152,7 @@ export default {
   timeOverDuration: timeOverDuration,
   secondsToDuration: secondsToDuration,
   progressColour: progressColour,
-  tsShortDate: tsShortDate
+  tsShortDate: tsShortDate,
+  storeObj: storeObj,
+  getObj: getObj
 }

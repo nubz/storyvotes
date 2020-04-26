@@ -4,6 +4,9 @@
     ".write": true,
     "stories": {
       ".indexOn": ["owner"]
+    },
+    "teams": {
+      ".indexOn": ["owner"]
     }
   }
 }

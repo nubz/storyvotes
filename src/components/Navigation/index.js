@@ -13,6 +13,12 @@ const authRoutes = [
     icon: 'plus circle'
   },
   {
+    route: 'TEAMS',
+    label: 'My teams',
+    color: 'white',
+    icon: 'users'
+  },
+  {
     route: 'HOME',
     label: 'My stories',
     color: 'white',

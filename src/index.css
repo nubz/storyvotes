@@ -1,20 +1,3 @@
-:root {
-  --color-background: #31037D;
-  --axis-x: 1px;
-  --axis-y: 1rem;
-  --delay: 10;
-  --color-black: #000;
-  --color-white: #fff;
-  --color-orange: #D49C3D;
-  --color-red: #D14B3D;
-  --color-violet: #CF52EB;
-  --color-blue: #44A3F7;
-  --color-green: #5ACB3C;
-  --color-yellow: #DEBF40;
-  --color-foreground: var(--color-white);
-  --font-name: Righteous;
-}
-
 body {
   margin: 0;
   padding: 0;
@@ -61,7 +44,7 @@ a.logo {
   font-family: 'Monofett', cursive;
   font-size: 36px;
   margin-top: 10px;
-  color: #fbbd08;
+  color: #3affff;
 }
 
 #root .navbar .ui.container {
@@ -83,7 +66,7 @@ a.logo {
 }
 
 #root .ui.primary.button {
-  background-color: #fbbd08;
+  background-color: #1f88be;
   color: black;
 }
 
@@ -112,7 +95,7 @@ a.logo {
 }
 
 #root .ui.statistic>.label, #root .ui.statistics .statistic>.label {
-  color: #fbbd08;
+  color: #3affff;
 }
 
 #root .ui.statistics>.statistic {
@@ -203,7 +186,7 @@ main {
 .ui.button.quizAnswer {
   margin: 1em;
   display: inline-block;
-  background: #fbbd08;
+  background: #3affff;
   color: black;
   min-width: 5em;
 }
@@ -217,7 +200,7 @@ main {
 }
 
 .ui.button.quizAnswer:hover {
-  background: #ebcd00;
+  background: #1f88be;
 }
 
 .response {

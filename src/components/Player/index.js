@@ -6,10 +6,11 @@ import { Link } from 'react-router-dom'
 
 const Player = props => {
   const {
+    storyName,
     storyId,
+    teamId,
     players,
     howManyPlayers,
-    storyName,
     submissions,
     submissionsPath,
     firebase,
@@ -19,11 +20,11 @@ const Player = props => {
   const [ scores, setScores ] = useState([])
   const [ playing, setPlaying ] = useState(false)
   const [ results, setResults ] = useState({})
-  const [cookies] = useCookies([`${storyId}-name`]);
-
+  const [cookies] = useCookies([`${storyId}-name`])
+  setPlaying(players.includes(cookies[`${storyId}-name`]))
   useEffect(() => {
     const getSubmission = player => submissions && submissions[player]
-    setPlaying(players.includes(cookies[`${storyId}-name`]))
+
     const updatedScores = players.reduce((list, next) => {
       const a = {}
       a.name = next
@@ -31,6 +32,7 @@ const Player = props => {
       list.push(a)
       return list
     }, [])
+
     setScores(updatedScores)
 
     const mode = (arr) => [...new Set(arr)]
@@ -44,23 +46,15 @@ const Player = props => {
     if (submissions && players.length &&
       Object.keys(submissions).length === howManyPlayers) {
         setTimeout(() => {
-            const topPlayers = []
-            const lowPlayers = []
             const allScores = players.map(getSubmission)
-            const topScore = Math.max.apply(null, allScores)
-            const minScore = Math.min.apply(null, allScores)
-          players.forEach(p => {
-              if(getSubmission(p) === topScore) {
-                topPlayers.push(p)
-              } else if (getSubmission(p) === minScore) {
-                lowPlayers.push(p)
-              }
+          setResults({mostFrequent: mode(allScores)})
+          firebase.db.ref(`stories/${teamId}/${storyId}`)
+            .update({
+              finished: firebase.database.ServerValue.TIMESTAMP
             })
-          setResults({high: topPlayers, low: lowPlayers, mostFrequent: mode(allScores) })
-          firebase.db.ref('stories/' + storyId).update({finished: true})
-        }, 2000)
+        }, 1000)
     }
-  }, [firebase, submissions, cookies, storyId, players, howManyPlayers])
+  }, [players, submissions, howManyPlayers, firebase.db, firebase.database.ServerValue.TIMESTAMP, teamId, storyId] )
 
   const answer = choice => async () => {
     setLocked(true)
@@ -69,10 +63,30 @@ const Player = props => {
     await firebase.db.ref(submissionsPath).update(newSubmissions)
   }
 
+  const generateOptions = mode => {
+    let options
+    switch(mode) {
+      case 'Days':
+      default:
+        options = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+        break
+      case 'Fibonaci':
+        options = [1, 2, 3, 5, 8, 13, 21, 34, 55]
+        break
+      case 'Scrum':
+        options = [0.5, 1, 2, 3, 4, 5, 6, 7, 8]
+        break
+    }
+
+    return options.map(o => (
+      <Button key={`option-${o}`} className={'quizAnswer'} disabled={locked} onClick={answer(o)}>{o}</Button>
+    ))
+  }
+
   return (
     <>
-      <h2 className={'question'}>{storyName}</h2>
       <ScoreBoard size={'large'} players={players} scores={scores} finished={finished}/>
+      <h2 className={'question'}>{storyName}</h2>
       {finished ?
         <Message color={'black'}>
           <Message.Header>Voting over, the scores with most votes:</Message.Header>
@@ -84,7 +98,7 @@ const Player = props => {
                     {h}
                   </Statistic.Value>
                   <Statistic.Label>
-                    Recommended Points
+                    {results.mostFrequent.length > 1 ? 'Joint candidate' : 'Recommended points'}
                   </Statistic.Label>
                 </Statistic>
               ))
@@ -103,39 +117,8 @@ const Player = props => {
               {playing ?
                 <div style={{marginTop: '2em'}}>
                   <h3>Choose how many points to vote for</h3>
-                  <Button className={'quizAnswer'} disabled={locked}
-                          onClick={answer(1)}>1</Button>
-                  <Button className={'quizAnswer'} disabled={locked}
-                          onClick={answer(2)}>2</Button>
-                  <Button className={'quizAnswer'} disabled={locked}
-                          onClick={answer(3)}>3</Button>
-                  <Button className={'quizAnswer'} disabled={locked}
-                          onClick={answer(4)}>4</Button>
-                  <Button className={'quizAnswer'} disabled={locked}
-                          onClick={answer(5)}>5</Button>
-                  <Button className={'quizAnswer'} disabled={locked}
-                          onClick={answer(6)}>6</Button>
-                  <Button className={'quizAnswer'} disabled={locked}
-                          onClick={answer(7)}>7</Button>
-                  <Button className={'quizAnswer'} disabled={locked}
-                          onClick={answer(8)}>8</Button>
-                  <Button className={'quizAnswer'} disabled={locked}
-                          onClick={answer(9)}>9</Button>
-                  <Button className={'quizAnswer'} disabled={locked}
-                          onClick={answer(10)}>10</Button>
-                  <Button className={'quizAnswer'} disabled={locked}
-                          onClick={answer(11)}>11</Button>
-                  <Button className={'quizAnswer'} disabled={locked}
-                          onClick={answer(12)}>12</Button>
-                  <Button className={'quizAnswer'} disabled={locked}
-                          onClick={answer(13)}>13</Button>
-                  <Button className={'quizAnswer'} disabled={locked}
-                          onClick={answer(14)}>14</Button>
-                  <Button className={'quizAnswer'} disabled={locked}
-                          onClick={answer(15)}>15</Button>
-                  <Button className={'quizAnswer'} disabled={locked}
-                          onClick={answer(16)}>16</Button>
-                  </div>
+                  {generateOptions()}
+                </div>
                 :
                 <Message color={'black'} icon>
                   <Icon name='circle notched' loading />
@@ -150,7 +133,7 @@ const Player = props => {
             <Message color={'black'} icon>
               <Icon name='circle notched' loading />
               <Message.Content>
-                <Message.Header>You have voted</Message.Header>
+                <Message.Header>Your vote has been registered</Message.Header>
                 Just waiting for everyone to vote...
               </Message.Content>
             </Message>
