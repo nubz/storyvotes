@@ -46,11 +46,11 @@ const AccountForm = props => {
       {profile.username ? <p>{profile.username}</p> : null}
       <p>Email: {authUser.email}</p>
       <Header as={'h2'}>Change your avatar</Header>
-      <Uploader folder={authUser.uid} handler={handlePhotoUpload} />
       {profile.avatar ? <Gallery photos={[profile.avatar]} /> : null}
+      <Uploader folder={authUser.uid} handler={handlePhotoUpload} />
       <Header as={'h2'}>Change your password</Header>
       <PasswordChangeForm />
-      <Header as={'h3'}>Sign out <SignOutButton /></Header>
+      <SignOutButton />
     </Segment>
   )
 };

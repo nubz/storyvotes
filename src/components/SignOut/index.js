@@ -1,9 +1,9 @@
 import React from 'react';
 import { withFirebase } from '../Firebase';
+import { Button } from 'semantic-ui-react'
 
-// Q: How do you pass props here?
 const SignOutButton = ({ firebase }) => (
-  <button className={`c-btn f2 f3-handLg mt4 c-btn--secondary--dminished`} onClick={firebase.doSignOut}>Sign out</button>
+  <Button onClick={firebase.doSignOut}>Sign out</Button>
 );
 
 export default withFirebase(SignOutButton);
