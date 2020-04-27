@@ -14,7 +14,7 @@ const Vote = props => {
   const [story, setStory] = useState({})
   const [ players, setPlayers ] = useState([])
   const [ submissions, setSubmissions ] = useState({})
-  const [ locked, setLocked ] = useState(false)
+  const [ hasVoted, setHasVoted ] = useState(false)
   const [ isVoting, setIsVoting ] = useState(false)
   const [ mostFrequent, setMostFrequent ] = useState([])
   const teamId = props.match.params.teamId
@@ -33,8 +33,9 @@ const Vote = props => {
       .map((v) => v[0])
 
     const findMostFrequent = s => {
-      if (s && Object.keys(s).length) {
-        return mode(Object.keys(s).reduce((list, next) => {
+      const keys = Object.keys(s)
+      if (s && keys.length) {
+        return mode(keys.reduce((list, next) => {
           list.push(s[next])
           return list
         }, []))
@@ -67,7 +68,7 @@ const Vote = props => {
   }, [firebase, cookies, storyId, storyPath, submissionsPath])
 
   const answer = choice => async () => {
-    setLocked(true)
+    setHasVoted(true)
     const oldSubmissions = submissions || {}
     const newSubmissions = {...oldSubmissions, [cookies[`${storyId}-name`]]:choice}
     await firebase.db.ref(submissionsPath).update(newSubmissions)
@@ -92,7 +93,7 @@ const Vote = props => {
     }
 
     return options.map(o => (
-      <Button key={`option-${o}`} className={'vote'} disabled={locked} onClick={answer(o)}>{o}</Button>
+      <Button key={`option-${o}`} className={'vote'} disabled={hasVoted} onClick={answer(o)}>{o}</Button>
     ))
   }
 
@@ -132,7 +133,7 @@ const Vote = props => {
               </Message>
               :
               <>
-                {!locked ?
+                {!hasVoted ?
                   <>
                     {isVoting ?
                       <div style={{marginTop: '2em'}}>
@@ -162,7 +163,7 @@ const Vote = props => {
               }
             </>
             :
-            <p>cannot find that story, <Link to={ROUTES.LANDING}>try again</Link></p>
+            <p>cannot find that story, <Link to={ROUTES.LANDING}>see what stories you can access</Link></p>
           }
       </Container>
     </ErrorBoundary>
