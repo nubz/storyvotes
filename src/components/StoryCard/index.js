@@ -1,19 +1,17 @@
 import { Card } from 'semantic-ui-react'
 import Avatar from '../Avatar'
 import React, { useEffect, useState } from 'react'
-import { compose } from 'recompose'
-import { withFirebase } from '../Firebase'
 import ScoreBoard from '../ScoreBoard'
 import Utils from '../Utils'
 import JoinVote from '../JoinVote'
 import { Link } from 'react-router-dom'
 
 const StoryCard = props => {
-  const { story, canJoin, firebase } = props
+  const { story, firebase } = props
+  const joined = Utils.firebaseToArray(story.joined)
   const [ submissions, setSubmissions ] = useState({})
   useEffect(() => {
-    const submissionsPath = 'submissions/' + story.id
-    const submissionsRef = firebase.db.ref(submissionsPath)
+    const submissionsRef = firebase.db.ref(`submissions/${story.id}`)
     const submissionsListener = submissionsRef
       .on("value", snapshot => {
         setSubmissions(snapshot.val())
@@ -21,11 +19,10 @@ const StoryCard = props => {
     return () => {
       submissionsRef.off("value", submissionsListener)
     }
-  }, [firebase, submissions, story])
-
+  }, [ story.id, firebase ])
   return (
     <>
-    {story && story.id &&
+    {story.id &&
       <Card color={'black'}>
         <Card.Content>
           <div style={{float: 'right'}}>
@@ -41,18 +38,19 @@ const StoryCard = props => {
         </Card.Content>
         <Card.Content extra>
           <ScoreBoard
+            firebase={firebase}
             size={'mini'}
-            storyPath={`stories/${story.teamId}/${story.id}`}
-            players={Utils.firebaseToArray(story.joined)}
-            maxPlayers={story.howManyPlayers}
             submissions={submissions}
+            storyPath={`stories/${story.teamId}/${story.id}`}
+            players={joined}
+            maxPlayers={story.howManyPlayers}
             finished={story.finished}/>
         </Card.Content>
-        {canJoin &&
+        {story.howManyPlayers > joined.length &&
           <Card.Content extra>
             <JoinVote
               story={story}
-              players={Utils.firebaseToArray(story.joined)}
+              players={joined}
               firebase={firebase}/>
           </Card.Content>
           }
@@ -62,10 +60,7 @@ const StoryCard = props => {
   )
 }
 
-const StoryCardDeps = compose(
-  withFirebase
-)(StoryCard);
 
-export default StoryCardDeps
+export default StoryCard
 
 

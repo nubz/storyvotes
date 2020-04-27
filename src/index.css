@@ -1,3 +1,9 @@
+:root {
+  --color-highlight: #aa4600;
+  --color-label: #ea526f;
+  --font-name: Roboto;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -17,9 +23,13 @@ body {
   font-family: 'Roboto', Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 
+#root a {
+  color: var(--color-highlight);
+}
+
 #root .ui.container {
   margin: 4em 0;
-  background-color: transparent;
+  background-color: rgba(20,20,20,0.2);
 }
 
 #root .ui.container.page {
@@ -44,7 +54,7 @@ a.logo {
   font-family: 'Monofett', cursive;
   font-size: 36px;
   margin-top: 10px;
-  color: #3affff;
+  color: var(--color-highlight);
 }
 
 #root .navbar .ui.container {
@@ -66,8 +76,11 @@ a.logo {
 }
 
 #root .ui.primary.button {
-  background-color: #1f88be;
+  background-color: var(--color-highlight);
   color: black;
+}
+#root .ui.black.card, #root .ui.black.cards>.card, #root .ui.cards>.black.card {
+  box-shadow: 0 0 0 3px #d4d4d5, 0 2px 0 0 #1b1c1d, 0 1px 3px 0 #d4d4d5;
 }
 
 #root .ui.card, #root .ui.cards>.card {
@@ -95,7 +108,7 @@ a.logo {
 }
 
 #root .ui.statistic>.label, #root .ui.statistics .statistic>.label {
-  color: #3affff;
+  color: var(--color-label);
 }
 
 #root .ui.statistics>.statistic {
@@ -183,10 +196,10 @@ main {
   display: block;
 }
 
-.ui.button.quizAnswer {
+.ui.button.vote {
   margin: 1em;
   display: inline-block;
-  background: #3affff;
+  background: var(--color-highlight);
   color: black;
   min-width: 5em;
 }
@@ -196,7 +209,7 @@ main {
 }
 
 .notVoted {
-  color: #bd081c;
+  color: var(--color-label);
 }
 
 .ui.button.quizAnswer:hover {

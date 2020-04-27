@@ -8,7 +8,7 @@ import SignInPage from '../SignIn';
 import PasswordForgetPage from '../PasswordForget';
 import Home from '../Home';
 import AccountPage from '../Account';
-import Vote from '../Play'
+import Vote from '../Vote'
 import Story from '../Story'
 import Team from '../Team'
 import Teams from '../Teams'

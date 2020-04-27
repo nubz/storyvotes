@@ -49,7 +49,10 @@ const HomePage = props => {
           .ref('submissions/')
           .child(id)
           .remove()
-          .then(() => console.log('removed all submissions'), err => console.error(err)), err => console.error(err))
+          .then(
+            () => console.log('removed all submissions'),
+            err => console.error(err)),
+        err => console.error(err))
   }
 
   return (

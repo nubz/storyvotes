@@ -58,16 +58,23 @@ const Teams = props => {
               myTeams.map(team => (
                 <List.Item key={team.id}>
                   <List.Content floated='right'>
-                    <Button size={'mini'} onClick={removeTeam(team.id)}>Delete</Button>
+                    <Button size={'mini'} onClick={removeTeam(team.id)}>
+                      Delete
+                    </Button>
                   </List.Content>
                   <List.Icon name='file outline' size='large' verticalAlign='middle' />
                   <List.Content>
-                    <List.Header><Link to={`team-access/${team.id}`}>{team.name}</Link></List.Header>
+                    <List.Header>
+                      <Link to={`team-access/${team.id}`}>
+                        {team.name}
+                      </Link>
+                    </List.Header>
                   </List.Content>
                 </List.Item>
               ))
             }
-          </List>:
+          </List>
+        :
           <Message>
             <Message.Header>You have no teams</Message.Header>
             <p>

@@ -7,49 +7,38 @@ import Utils from '../Utils'
 
 const Landing = props => {
   const { firebase } = props
-  const [stories, setStories ] = useState([])
-  const [fullStories, setFullStories ] = useState([])
-  const teamAccess = Utils.getObj('teamAccess')
+  console.log('rendering stories')
+  const [teamStories, setTeamStories ] = useState([])
   useEffect(() => {
     const listRef = firebase.db.ref('stories/')
     const listListener = listRef
-
       .on("value", snapshot => {
-        const newStories = []
-        const fullStories = []
-        snapshot.forEach(childSnapshot => {
-          if (teamAccess && teamAccess.includes(childSnapshot.key)) {
-            const stories = Utils.firebaseToArrayWithKey(childSnapshot.val())
-            stories.forEach(story => {
-              const numberJoined = story.joined ? Object.keys(story.joined).length : 0
-              story.numberJoined = numberJoined
-              if (story.howManyPlayers > numberJoined) {
-                newStories.push(story)
-              } else {
-                fullStories.push(story)
-              }
+        const teamAccess = Utils.getObj('teamAccess')
+        const newTeamStories = []
+        snapshot.forEach(team => {
+          if (Array.isArray(teamAccess) && teamAccess.includes(team.key)) {
+            team.forEach(t => {
+              newTeamStories.push({...t.val(), id: t.key})
             })
           }
         })
-
-        setStories(newStories.reverse())
-        setFullStories(fullStories.reverse())
+        setTeamStories(newTeamStories.reverse())
       })
 
     return () => {
       listRef.off("value", listListener)
     }
-  }, [firebase, teamAccess])
+  }, [firebase])
 
   return (
     <Segment>
       <Header as='h2' dividing>
         Stories from all teams you have access to
       </Header>
-      {stories.length ?
+      {teamStories.length ?
         <Card.Group>
-          {stories.map(s => (
-            <StoryCard key={s.id} story={s} canJoin={true} />
+          {teamStories.map(s => (
+            <StoryCard firebase={firebase} key={s.id} story={s} />
           ))}
         </Card.Group>
         :
@@ -60,25 +49,6 @@ const Landing = props => {
           </p>
         </Message>
       }
-      <Header as='h2' dividing>
-        Stories with all voters registered
-      </Header>
-      {fullStories.length ?
-        <Card.Group>
-          {fullStories.map(s => (
-            <StoryCard key={s.id} story={s} canJoin={false} />
-          ))}
-        </Card.Group>
-        :
-        <Message color={'black'}>
-          <Message.Header>No stories fully registered</Message.Header>
-          <p>
-            Stories with all voters registered will appear here.
-          </p>
-        </Message>
-
-      }
-
     </Segment>
   );
 }

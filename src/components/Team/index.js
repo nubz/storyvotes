@@ -60,7 +60,7 @@ const Team = props => {
       {stories.length ?
         <Card.Group>
           {stories.map(s => (
-            <StoryCard key={s.id} story={s} canJoin={true} />
+            <StoryCard firebase={firebase} key={s.id} story={s} canJoin={true} />
           ))}
         </Card.Group>
         :
@@ -77,7 +77,7 @@ const Team = props => {
       {fullStories.length ?
         <Card.Group>
           {fullStories.map(s => (
-            <StoryCard key={s.id} story={s} canJoin={false} />
+            <StoryCard firebase={firebase} key={s.id} story={s} canJoin={false} />
           ))}
         </Card.Group>
         :

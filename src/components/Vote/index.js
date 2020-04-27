@@ -9,13 +9,13 @@ import ScoreBoard from '../ScoreBoard'
 import { useCookies } from 'react-cookie'
 import ErrorBoundary from '../ErrorBoundary'
 
-const Play = props => {
+const Vote = props => {
   const { firebase } = props
   const [story, setStory] = useState({})
   const [ players, setPlayers ] = useState([])
   const [ submissions, setSubmissions ] = useState({})
   const [ locked, setLocked ] = useState(false)
-  const [ playing, setPlaying ] = useState(false)
+  const [ isVoting, setIsVoting ] = useState(false)
   const [ mostFrequent, setMostFrequent ] = useState([])
   const teamId = props.match.params.teamId
   const storyId = props.match.params.id;
@@ -46,7 +46,7 @@ const Play = props => {
       .on("value", snapshot => {
         const s = snapshot.val();
         const p = Utils.firebaseToArray(s.joined)
-        setPlaying(p.includes(cookies[`${storyId}-name`]))
+        setIsVoting(p.includes(cookies[`${storyId}-name`]))
         setPlayers(p)
         setStory(s)
       });
@@ -71,6 +71,9 @@ const Play = props => {
     const oldSubmissions = submissions || {}
     const newSubmissions = {...oldSubmissions, [cookies[`${storyId}-name`]]:choice}
     await firebase.db.ref(submissionsPath).update(newSubmissions)
+    if (Object.keys(newSubmissions).length === players.length) {
+      firebase.db.ref(storyPath).update({finished: firebase.database.ServerValue.TIMESTAMP})
+    }
   }
 
   const generateOptions = mode => {
@@ -89,7 +92,7 @@ const Play = props => {
     }
 
     return options.map(o => (
-      <Button key={`option-${o}`} className={'quizAnswer'} disabled={locked} onClick={answer(o)}>{o}</Button>
+      <Button key={`option-${o}`} className={'vote'} disabled={locked} onClick={answer(o)}>{o}</Button>
     ))
   }
 
@@ -100,20 +103,21 @@ const Play = props => {
           <>
             <ScoreBoard
               size={'large'}
+              firebase={firebase}
+              submissions={submissions}
               storyPath={storyPath}
               players={players}
               maxPlayers={story.howManyPlayers}
-              submissions={submissions}
               finished={story.finished}/>
             <h2 className={'question'}>{story.name}</h2>
             {story.finished ?
-              <Message color={'black'}>
-                <Message.Header>Voting over, the scores with most votes:</Message.Header>
+              <Message color={'black'} style={{backgroundColor: 'transparent', textAlign: 'center'}}>
+                <Message.Header>Voting complete, the scores with most votes:</Message.Header>
                 <div style={{textAlign: 'center'}}>
                   {mostFrequent && mostFrequent.map(h => (
                     <Statistic size={'huge'} key={`stat-${h}`}>
                       <Statistic.Value>
-                        {h}
+                        <span className={'notVoted'}>{h}</span>
                       </Statistic.Value>
                       <Statistic.Label>
                         {mostFrequent.length > 1 ? 'Joint candidate' : 'Recommended points'}
@@ -123,14 +127,14 @@ const Play = props => {
                   }
                 </div>
                 <p style={{textAlign: 'center'}}>
-                  <Link as={'h2'} style={{color: 'white'}} to={'/'}>Return to start</Link>
+                  <Link as={'h2'} to={'/'}>Return to start</Link>
                 </p>
               </Message>
               :
               <>
                 {!locked ?
                   <>
-                    {playing ?
+                    {isVoting ?
                       <div style={{marginTop: '2em'}}>
                         <h3>Choose how many points to vote for</h3>
                         {generateOptions()}
@@ -167,5 +171,5 @@ const Play = props => {
 
 const LoadStory = compose(
   withFirebase
-)(Play);
+)(Vote);
 export default LoadStory

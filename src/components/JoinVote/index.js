@@ -13,7 +13,7 @@ const JoinForm = props => {
     setter(event.target.value);
   }
   const invalidNickName = nickName.length < 1
-  const join = async function (e) {
+  const join = function (e) {
     e.preventDefault()
     const newJoined = players ? players : []
     const exists = players.filter(p => p === nickName)
@@ -21,13 +21,21 @@ const JoinForm = props => {
       `${nickName}-${players.filter(p => p.startsWith(nickName)).length}` : nickName
     newJoined.push(uniqueNickName)
     setCookie(cookieName, uniqueNickName, { path: '/' })
-    await firebase.db.ref('stories/' + story.teamId + '/' + story.id).update({joined: newJoined})
-    history.push(`/vote/${story.teamId}/${story.id}`)
+    firebase.db
+      .ref('stories/' + story.teamId + '/' + story.id)
+      .update({joined: newJoined})
+      .then(() => {
+        history.push(`/vote/${story.teamId}/${story.id}`)
+      }, err => console.log(err))
   }
   return (
     <>
-      {cookies[cookieName] ?
-        <h1>You have joined as {cookies[cookieName]}</h1>
+      {cookies[cookieName] && story && story.id ?
+        <h2>
+          <a href={`/vote/${story.teamId}/${story.id}`}>
+            You can vote as {cookies[cookieName]}
+          </a>
+        </h2>
         :
         <form onSubmit={join}>
           <Input

@@ -62,42 +62,42 @@ const Story = props => {
     <Container className={'page'}>
       <h1>Add a team story</h1>
       {teams.length ?
-      <Form onSubmit={generateStory} style={{marginBottom: '3em'}}>
-        <Form.Field>
-          <h3>Select which team</h3>
-          <Select
-            placeholder='Select which team'
-            value={teamId}
-            onChange={onSelectChange(setTeamId)}
-            options={teams} />
-          <h3>Story name</h3>
-          <Input
-            name="storyName"
-            type="text"
-            value={storyName}
-            onChange={onTextChange(setStoryName)}
-            placeholder="Story name"
-          >
-            <input autoComplete="off"/>
-          </Input>
-        </Form.Field>
-        <Form.Field>
-          <h3>How many voters</h3>
-          <Input
-            name="howManyPlayers"
-            type="number"
-            value={howManyPlayers}
-            onChange={onNumberChange(setHowManyPlayers)}
-            placeholder="How many voters"
-            style={{minWidth: '60px', width: '10%'}}
-          >
-            <input autoComplete="off"/>
-          </Input>
-        </Form.Field>
-        <Button disabled={invalidForm} type='submit'>Add story</Button>
-      </Form>
-        :
-      <p>You need to add a team before adding a story, <a href={ROUTES.NEW_TEAM}>add a team</a></p>
+        <Form onSubmit={generateStory} style={{marginBottom: '3em'}}>
+          <Form.Field>
+            <h3>Select which team</h3>
+            <Select
+              placeholder='Select which team'
+              value={teamId}
+              onChange={onSelectChange(setTeamId)}
+              options={teams} />
+            <h3>Story name</h3>
+            <Input
+              name="storyName"
+              type="text"
+              value={storyName}
+              onChange={onTextChange(setStoryName)}
+              placeholder="Story name"
+            >
+              <input autoComplete="off"/>
+            </Input>
+          </Form.Field>
+          <Form.Field>
+            <h3>How many voters</h3>
+            <Input
+              name="howManyPlayers"
+              type="number"
+              value={howManyPlayers}
+              onChange={onNumberChange(setHowManyPlayers)}
+              placeholder="How many voters"
+              style={{minWidth: '60px', width: '10%'}}
+            >
+              <input autoComplete="off"/>
+            </Input>
+          </Form.Field>
+          <Button disabled={invalidForm} type='submit'>Add story</Button>
+        </Form>
+          :
+        <p>You need to add a team before adding a story, <a href={ROUTES.NEW_TEAM}>add a team</a></p>
       }
     </Container>
   )
