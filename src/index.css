@@ -1,7 +1,7 @@
 :root {
-  --color-highlight: #aa4600;
+  --color-highlight: #0bc986;
   --color-label: #ea526f;
-  --font-name: Roboto;
+  --font-name: PT Sans Caption;
 }
 
 body {
@@ -15,7 +15,7 @@ body {
 
 #root {
   overflow-x: hidden;
-  background-image: url("/assets/images/bg3.jpg");
+  background-image: url("/assets/images/bg2.jpg");
   background-attachment: fixed;
   background-size: cover;
   min-height: 100vh;
@@ -51,7 +51,7 @@ body {
 }
 
 a.logo {
-  font-family: 'Monofett', cursive;
+  font-family: var(--font-name), cursive;
   font-size: 36px;
   margin-top: 10px;
   color: var(--color-highlight);
@@ -96,7 +96,7 @@ a.logo {
 #root .ui.statistic>.value, #root .ui.statistics .statistic>.value,
 #root h1, #root h2, #root h3, #root h4, #root h5 {
   color: white;
-  font-family: 'Roboto', Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-family: var(--font-name);
 }
 
 #root h1{

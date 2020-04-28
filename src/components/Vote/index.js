@@ -33,7 +33,7 @@ const Vote = props => {
       .map((v) => v[0])
 
     const findMostFrequent = s => {
-      const keys = Object.keys(s)
+      const keys = s && Object.keys(s)
       if (s && keys.length) {
         return mode(keys.reduce((list, next) => {
           list.push(s[next])
