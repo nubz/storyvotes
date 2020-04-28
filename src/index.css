@@ -15,7 +15,7 @@ body {
 
 #root {
   overflow-x: hidden;
-  background-image: url("/assets/images/bg.jpg");
+  background-image: url("/assets/images/bg3.jpg");
   background-attachment: fixed;
   background-size: cover;
   min-height: 100vh;
@@ -29,7 +29,7 @@ body {
 
 #root .ui.container {
   margin: 4em 0;
-  background-color: rgba(20,20,20,0.2);
+  background-color: rgba(20,20,20,0.4);
 }
 
 #root .ui.container.page {

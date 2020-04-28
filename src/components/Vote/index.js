@@ -110,7 +110,7 @@ const Vote = props => {
               players={players}
               maxPlayers={story.howManyPlayers}
               finished={story.finished}/>
-            <h2 className={'question'}>{story.name}</h2>
+            <h2 className={'question'} style={{textAlign: 'center'}}>{story.name}</h2>
             {story.finished ?
               <Message color={'black'} style={{backgroundColor: 'transparent', textAlign: 'center'}}>
                 <Message.Header>Voting complete, the scores with most votes:</Message.Header>
