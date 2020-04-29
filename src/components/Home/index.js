@@ -5,6 +5,7 @@ import { compose } from 'recompose'
 import { withFirebase } from '../Firebase'
 import Utils from '../Utils'
 import * as ROUTES from '../../constants/routes'
+import { Link } from 'react-router-dom'
 
 const HomePageView = props => (
   <AuthUserContext.Consumer>
@@ -59,17 +60,23 @@ const HomePage = props => {
     <div>
       <Segment padded>
         <h1>My stories</h1>
+        <p>Stories you can view or delete.</p>
+        <p>
+          <a href={ROUTES.STORY}>Add a story</a>
+        </p>
         {myStories.length ?
           <List divided relaxed inverted>
             {
               myStories.map(story => (
                 <List.Item key={story.id}>
                   <List.Content floated='right'>
-                    <Button size={'mini'} onClick={removeStory(story.teamId, story.id)}>Delete</Button>
+                    <Button icon={'delete'} size={'mini'} onClick={removeStory(story.teamId, story.id)}/>
                   </List.Content>
                   <List.Icon name='file outline' size='large' verticalAlign='middle' />
                   <List.Content>
-                    <List.Header>{story.name}</List.Header>
+                    <List.Header>
+                      <Link to={`vote/${story.teamId}/${story.id}`}>{story.name}</Link>
+                    </List.Header>
                   </List.Content>
                 </List.Item>
               ))

@@ -18,7 +18,10 @@ const Landing = props => {
         snapshot.forEach(team => {
           if (Array.isArray(teamAccess) && teamAccess.includes(team.key)) {
             team.forEach(t => {
-              newTeamStories.push({...t.val(), id: t.key})
+              const story = t.val()
+              story.id = t.key
+              story.numberJoined = story.joined ? Object.keys(story.joined).length : 0
+              newTeamStories.push(story)
             })
           }
         })

@@ -15,7 +15,7 @@ const TeamCreate = props => {
       name: teamName
     }
     await firebase.db.ref('teams').push(storyConfig)
-    history.push(`/`)
+    history.push(`/teams`)
   }
 
   const onTextChange = setter => event => {
@@ -28,10 +28,10 @@ const TeamCreate = props => {
     <Container className={'page'}>
       <h1>Add a team</h1>
       <Form onSubmit={createTeam} style={{marginBottom: '3em'}}>
+        <h2>Team name</h2>
         <Form.Field>
           <Input
             name="teamName"
-            label="Team name"
             type="text"
             value={teamName}
             onChange={onTextChange(setTeamName)}

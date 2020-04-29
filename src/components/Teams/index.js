@@ -18,6 +18,7 @@ const TeamsView = props => (
 const Teams = props => {
   const { authUser, firebase } = props
   const [ myTeams, setMyTeams ] = useState([])
+  const [ host, setHost ] = useState('')
   useEffect(() => {
     const teamListRef = firebase.db.ref('teams/')
     const teamListener = teamListRef
@@ -26,6 +27,8 @@ const Teams = props => {
       .on("value", snapshot => {
         setMyTeams(Utils.firebaseToArrayWithKey(snapshot.val()))
       })
+
+    setHost(window.location)
 
     return () => {
       teamListRef.off("value", teamListener)
@@ -52,14 +55,16 @@ const Teams = props => {
       <Segment padded>
         <h1>My teams</h1>
         <p>Teams are a simple way to group stories, when adding stories you can choose which team to add them to and share the team link to expose only stories from that team.</p>
+        <p>
+          <a href={ROUTES.NEW_TEAM}>Add a team</a>
+        </p>
         {myTeams.length ?
           <List divided relaxed inverted>
             {
               myTeams.map(team => (
                 <List.Item key={team.id}>
                   <List.Content floated='right'>
-                    <Button size={'mini'} onClick={removeTeam(team.id)}>
-                      Delete
+                    <Button icon={'delete'} size={'mini'} onClick={removeTeam(team.id)}>
                     </Button>
                   </List.Content>
                   <List.Icon name='file outline' size='large' verticalAlign='middle' />
@@ -69,6 +74,9 @@ const Teams = props => {
                         {team.name}
                       </Link>
                     </List.Header>
+                    <List.Description>
+                      {host && `${host.protocol}://${host.host}/team-access/${team.id}`}
+                    </List.Description>
                   </List.Content>
                 </List.Item>
               ))

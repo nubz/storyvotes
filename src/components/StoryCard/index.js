@@ -1,13 +1,22 @@
-import { Card } from 'semantic-ui-react'
+import { Button, Card } from 'semantic-ui-react'
 import Avatar from '../Avatar'
 import React, { useEffect, useState } from 'react'
 import ScoreBoard from '../ScoreBoard'
 import Utils from '../Utils'
 import JoinVote from '../JoinVote'
 import { Link } from 'react-router-dom'
+import { AuthUserContext } from '../Session'
+
+const StoryCardView = props => (
+  <AuthUserContext.Consumer>
+    {authUser => (
+      <StoryCard authUser={authUser} {...props}/>
+    )}
+  </AuthUserContext.Consumer>
+);
 
 const StoryCard = props => {
-  const { story, firebase } = props
+  const { story, firebase, authUser } = props
   const joined = Utils.firebaseToArray(story.joined)
   const [ submissions, setSubmissions ] = useState({})
   useEffect(() => {
@@ -20,6 +29,14 @@ const StoryCard = props => {
       submissionsRef.off("value", submissionsListener)
     }
   }, [ story.id, firebase ])
+
+  const closeVoting = e => {
+    e.preventDefault()
+    firebase.db
+      .ref(`stories/${story.teamId}/${story.id}`)
+      .update({howManyPlayers: joined.length})
+  }
+
   return (
     <>
     {story.id &&
@@ -48,6 +65,7 @@ const StoryCard = props => {
         </Card.Content>
         {story.howManyPlayers > joined.length &&
           <Card.Content extra>
+            {authUser && joined.length > 0 &&  <Button primary as={'a'} onClick={closeVoting}>As owner you may close the voting now</Button>}
             <JoinVote
               story={story}
               players={joined}
@@ -61,6 +79,6 @@ const StoryCard = props => {
 }
 
 
-export default StoryCard
+export default StoryCardView
 
 

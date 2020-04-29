@@ -29,7 +29,6 @@ body {
 
 #root .ui.container {
   margin: 4em 0;
-  background-color: rgba(20,20,20,0.4);
 }
 
 #root .ui.container.page {
@@ -52,7 +51,7 @@ body {
 
 a.logo {
   font-family: var(--font-name), cursive;
-  font-size: 36px;
+  font-size: 30px;
   margin-top: 10px;
   color: var(--color-highlight);
 }
@@ -61,10 +60,6 @@ a.logo {
   margin-top: 0;
   margin-bottom: 0;
   padding: 12px 10px;
-}
-
-#root .ui.header {
-  color: white;
 }
 
 #root .ui.menu {
@@ -79,9 +74,6 @@ a.logo {
   background-color: var(--color-highlight);
   color: black;
 }
-#root .ui.black.card, #root .ui.black.cards>.card, #root .ui.cards>.black.card {
-  box-shadow: 0 0 0 3px #d4d4d5, 0 2px 0 0 #1b1c1d, 0 1px 3px 0 #d4d4d5;
-}
 
 #root .ui.card, #root .ui.cards>.card {
   background: rgba(0,0,0,0.3);
@@ -94,8 +86,9 @@ a.logo {
 #root .ui.cards>.card>.content>.header+.description,
 #root .ui.cards>.card>.content>.meta+.description,
 #root .ui.statistic>.value, #root .ui.statistics .statistic>.value,
-#root h1, #root h2, #root h3, #root h4, #root h5 {
-  color: white;
+#root h1, #root h2, #root h3, #root h4, #root h5,
+#root .ui.header {
+  color: lightgrey;
   font-family: var(--font-name);
 }
 
@@ -113,6 +106,10 @@ a.logo {
 
 #root .ui.statistics>.statistic {
   background: rgba(0,0,0,0.5);
+}
+
+#root .ui.huge.statistic {
+  padding: 0 30px;
 }
 
 main {

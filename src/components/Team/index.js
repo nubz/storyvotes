@@ -8,22 +8,22 @@ import Utils from '../Utils'
 const Team = props => {
   const { firebase } = props
   const [stories, setStories ] = useState([])
-  const [ team, setTeam ] = useState({})
+  const [ team, setTeam ] = useState(null)
   const [fullStories, setFullStories ] = useState([])
   const teamId = props.match.params.id;
   const storyPath = `stories/${teamId}`
   const teamPath = `teams/${teamId}`
-  const teamAccess = Utils.getObj('teamAccess')
-  if (!teamAccess) {
-    Utils.storeObj('teamAccess', [teamId])
-  } else if (teamAccess.length && !teamAccess.includes(teamId)) {
-    Utils.storeObj('teamAccess', [...teamAccess, teamId])
-  }
   useEffect(() => {
     const teamRef = firebase.db.ref(teamPath)
     const teamListener = teamRef
       .on("value", snapshot => {
         setTeam(snapshot.val())
+        const teamAccess = Utils.getObj('teamAccess')
+        if (!teamAccess) {
+          Utils.storeObj('teamAccess', [teamId])
+        } else if (teamAccess.length && !teamAccess.includes(teamId)) {
+          Utils.storeObj('teamAccess', [...teamAccess, teamId])
+        }
       })
     const listRef = firebase.db.ref(storyPath)
     const listListener = listRef
@@ -50,45 +50,57 @@ const Team = props => {
       listRef.off("value", listListener)
       teamRef.off("value", teamListener)
     }
-  }, [firebase, storyPath, teamPath])
+  }, [firebase, storyPath, teamPath, teamId])
 
   return (
     <Segment>
-      <Header as='h2' dividing>
-        Stories from {team.name}
-      </Header>
-      {stories.length ?
-        <Card.Group>
-          {stories.map(s => (
-            <StoryCard firebase={firebase} key={s.id} story={s} canJoin={true} />
-          ))}
-        </Card.Group>
-        :
-        <Message color={'black'}>
-          <Message.Header>No stories to vote on</Message.Header>
-          <p>
-            When stories from this team are available to vote on, they will appear here. You need to create an account to add stories.
-          </p>
-        </Message>
-      }
-      <Header as='h2' dividing>
-        Stories with all voters registered
-      </Header>
-      {fullStories.length ?
-        <Card.Group>
-          {fullStories.map(s => (
-            <StoryCard firebase={firebase} key={s.id} story={s} canJoin={false} />
-          ))}
-        </Card.Group>
-        :
-        <Message color={'black'}>
-          <Message.Header>No stories fully registered</Message.Header>
-          <p>
-            Stories from this team with all voters registered will appear here.
-          </p>
-        </Message>
+      {team ?
+        <>
+          <Header as='h2' dividing>
+            Stories from {team.name}
+          </Header>
+          {stories.length ?
+            <Card.Group>
+              {stories.map(s => (
+                <StoryCard firebase={firebase} key={s.id} story={s} canJoin={true} />
+              ))}
+            </Card.Group>
+            :
+            <Message color={'black'}>
+              <Message.Header>No stories to vote on</Message.Header>
+              <p>
+                When stories from this team are available to vote on, they will appear here. You need to create an account to add stories.
+              </p>
+            </Message>
+          }
+          <Header as='h2' dividing>
+            Stories with all voters registered
+          </Header>
+          {fullStories.length ?
+            <Card.Group>
+              {fullStories.map(s => (
+                <StoryCard firebase={firebase} key={s.id} story={s} canJoin={false} />
+              ))}
+            </Card.Group>
+            :
+            <Message color={'black'}>
+              <Message.Header>No stories fully registered</Message.Header>
+              <p>
+                Stories from this team with all voters registered will appear here.
+              </p>
+            </Message>
 
+          }
+        </>
+        :
+        <Message color={'red'}>
+          <Message.Header>Could not find that team</Message.Header>
+          <p>
+            This team may have been deleted by the owner.
+          </p>
+        </Message>
       }
+
 
     </Segment>
   );
