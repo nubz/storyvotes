@@ -6,6 +6,7 @@ import Utils from '../Utils'
 import JoinVote from '../JoinVote'
 import { Link } from 'react-router-dom'
 import { AuthUserContext } from '../Session'
+import { withRouter } from 'react-router-dom'
 
 const StoryCardView = props => (
   <AuthUserContext.Consumer>
@@ -16,7 +17,7 @@ const StoryCardView = props => (
 );
 
 const StoryCard = props => {
-  const { story, firebase, authUser } = props
+  const { story, firebase, authUser, history } = props
   const joined = Utils.firebaseToArray(story.joined)
   const [ submissions, setSubmissions ] = useState({})
   useEffect(() => {
@@ -30,11 +31,20 @@ const StoryCard = props => {
     }
   }, [ story.id, firebase ])
 
-  const closeVoting = e => {
+  const closeVoting = s => e => {
     e.preventDefault()
+    const updates = {
+      howManyPlayers: joined.length
+    }
+    if (s && Object.keys(s).length === joined.length) {
+      updates.finished = firebase.database.ServerValue.TIMESTAMP
+    }
     firebase.db
       .ref(`stories/${story.teamId}/${story.id}`)
-      .update({howManyPlayers: joined.length})
+      .update(updates)
+      .then(() => {
+        history.push(`vote/${story.teamId}/${story.id}`)
+      })
   }
 
   return (
@@ -65,7 +75,8 @@ const StoryCard = props => {
         </Card.Content>
         {story.howManyPlayers > joined.length &&
           <Card.Content extra>
-            {authUser && joined.length > 0 &&  <Button primary as={'a'} onClick={closeVoting}>As owner you may close the voting now</Button>}
+            {authUser && joined.length > 0 &&
+              <Button primary style={{marginBottom: '1em'}} onClick={closeVoting(submissions)}>Close off registration</Button>}
             <JoinVote
               story={story}
               players={joined}
@@ -79,6 +90,6 @@ const StoryCard = props => {
 }
 
 
-export default StoryCardView
+export default withRouter(StoryCardView)
 
 

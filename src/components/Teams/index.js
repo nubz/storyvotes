@@ -67,7 +67,7 @@ const Teams = props => {
                     <Button icon={'delete'} size={'mini'} onClick={removeTeam(team.id)}>
                     </Button>
                   </List.Content>
-                  <List.Icon name='file outline' size='large' verticalAlign='middle' />
+                  <List.Icon name='users' size='large' verticalAlign='middle' />
                   <List.Content>
                     <List.Header>
                       <Link to={`team-access/${team.id}`}>

@@ -76,7 +76,7 @@ a.logo {
 }
 
 #root .ui.card, #root .ui.cards>.card {
-  background: rgba(0,0,0,0.3);
+  background: rgba(0,0,0,0.5);
 }
 
 #root .ui.card>.content>.header, #root .ui.cards>.card>.content>.header,
@@ -102,10 +102,6 @@ a.logo {
 
 #root .ui.statistic>.label, #root .ui.statistics .statistic>.label {
   color: var(--color-label);
-}
-
-#root .ui.statistics>.statistic {
-  background: rgba(0,0,0,0.5);
 }
 
 #root .ui.huge.statistic {

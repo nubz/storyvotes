@@ -12,6 +12,12 @@ const authRoutes = [
     icon: 'plus circle'
   },
   {
+    route: 'TEAMS',
+    label: 'My teams',
+    color: 'grey',
+    icon: 'users'
+  },
+  {
     route: 'ACCOUNT',
     label: 'Account',
     color: 'grey',

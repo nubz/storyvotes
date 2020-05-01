@@ -72,27 +72,13 @@ const Vote = props => {
     const oldSubmissions = submissions || {}
     const newSubmissions = {...oldSubmissions, [cookies[`${storyId}-name`]]:choice}
     await firebase.db.ref(submissionsPath).update(newSubmissions)
-    if (Object.keys(newSubmissions).length === players.length) {
+    if (Object.keys(newSubmissions).length === story.howManyPlayers) {
       firebase.db.ref(storyPath).update({finished: firebase.database.ServerValue.TIMESTAMP})
     }
   }
 
-  const generateOptions = mode => {
-    let options
-    switch(mode) {
-      case 'Days':
-      default:
-        options = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-        break
-      case 'Fibonaci':
-        options = [1, 2, 3, 5, 8, 13, 21, 34, 55]
-        break
-      case 'Scrum':
-        options = [0.5, 1, 2, 3, 4, 5, 6, 7, 8]
-        break
-    }
-
-    return options.map(o => (
+  const generateOptions = (mode = 'Days') => {
+    return Utils.decks[mode].map(o => (
       <Button key={`option-${o}`} className={'vote'} disabled={hasVoted} onClick={answer(o)}>{o}</Button>
     ))
   }
@@ -106,14 +92,12 @@ const Vote = props => {
               size={'large'}
               firebase={firebase}
               submissions={submissions}
-              storyPath={storyPath}
               players={players}
-              maxPlayers={story.howManyPlayers}
               finished={story.finished}/>
             <h2 className={'question'} style={{textAlign: 'center'}}>{story.name}</h2>
             {story.finished ?
               <Message color={'black'} style={{backgroundColor: 'transparent', textAlign: 'center'}}>
-                <Message.Header>Voting complete, the scores with most votes:</Message.Header>
+                <Message.Header>Voting complete, the options with most votes:</Message.Header>
                 <div style={{textAlign: 'center'}}>
                   {mostFrequent && mostFrequent.map(h => (
                     <Statistic size={'huge'} key={`stat-${h}`}>
@@ -121,7 +105,7 @@ const Vote = props => {
                         <span className={'notVoted'}>{h}</span>
                       </Statistic.Value>
                       <Statistic.Label>
-                        {mostFrequent.length > 1 ? 'Joint candidate' : 'Recommended points'}
+                        {mostFrequent.length > 1 ? 'Joint candidate' : 'Recommended'}
                       </Statistic.Label>
                     </Statistic>
                   ))
@@ -137,8 +121,8 @@ const Vote = props => {
                   <>
                     {isVoting ?
                       <div style={{marginTop: '2em'}}>
-                        <h3>Choose how many points to vote for</h3>
-                        {generateOptions()}
+                        <h3>Vote for your choice</h3>
+                        {generateOptions(story.mode)}
                       </div>
                       :
                       <Message color={'black'} icon>

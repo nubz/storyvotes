@@ -8,13 +8,23 @@ const JoinForm = props => {
   const { story, firebase, players, history } = props
   const cookieName = `${story.id}-name`
   const [nickName, setNickName ] = useState('')
-  const [cookies, setCookie] = useCookies([cookieName]);
+  const [cookies, setCookie] = useCookies([cookieName])
+  const input = React.createRef()
   const onChange = setter => event => {
     setter(event.target.value);
   }
-  const invalidNickName = nickName.length < 1
-  const join = function (e) {
+  const invalidNickName = nickName.length < 2
+  const join = e => {
     e.preventDefault()
+    if (invalidNickName) {
+      const uncontrolled = input.current.value
+      console.log('using uncontrolled value ' + uncontrolled)
+      if (uncontrolled.length < 2) {
+        return false
+      }
+
+      setNickName(uncontrolled)
+    }
     const newJoined = players ? players : []
     const exists = players.filter(p => p === nickName)
     const uniqueNickName = exists.length ?
@@ -40,6 +50,7 @@ const JoinForm = props => {
         <form onSubmit={join}>
           <Input
             iconPosition="left"
+            ref={input}
             name="nickname"
             type="text"
             value={nickName}

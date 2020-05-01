@@ -3,7 +3,7 @@ import { compose } from 'recompose'
 import { withFirebase } from '../Firebase'
 import { withAuthUser, withAuthorization } from '../Session';
 import { withRouter } from 'react-router-dom'
-import { Form, Input, Button, Container, Select } from 'semantic-ui-react'
+import { Form, Input, Button, Container, Select, Radio } from 'semantic-ui-react'
 import Utils from '../Utils'
 import * as ROUTES from '../../constants/routes'
 
@@ -13,6 +13,7 @@ const Story = props => {
   const [ teamId, setTeamId ] = useState('')
   const [ teams, setTeams ] = useState([])
   const [ storyName, setStoryName ] = useState('')
+  const [ mode, setMode ] = useState('Days')
 
   useEffect(() => {
     const teamRef = firebase.db.ref('teams/')
@@ -35,7 +36,7 @@ const Story = props => {
   async function generateStory() {
     const storyConfig = {
       owner: authUser.uid,
-      mode: 'Days',
+      mode: mode,
       howManyPlayers: howManyPlayers,
       name: storyName,
       teamId: teamId
@@ -94,6 +95,18 @@ const Story = props => {
               <input autoComplete="off"/>
             </Input>
           </Form.Field>
+          <h3>Select the voting system</h3>
+          {mode && Object.keys(Utils.decks).map(o => (
+            <Form.Field key={o}>
+              <Radio
+                label={o}
+                name='mode'
+                value={o}
+                checked={mode === o}
+                onChange={onSelectChange(setMode)}
+              />
+            </Form.Field>
+          ))}
           <Button disabled={invalidForm} type='submit'>Add story</Button>
         </Form>
           :
