@@ -33,23 +33,49 @@ The app will make a recommendation on the option voted for most frequently, or h
 
 # To run on your own Firebase project
 
-Clone this repository bearing in mind it will not have a firebase project to connect to automatically, you need to use your own!
+No doubt if you want to use this tool you will want to own the data. 
+
+Clone this repository, bearing in mind it will not have a firebase project to connect to automatically, you need to use your own!
+
+[Create a firebase project](https://firebase.google.com/) with realtime database, storage (for avatars) and, optionally, hosting
 
 ## Firebase credentials
 
 You will need your own Firebase credentials, populate a .env file with the creds from your Firebase console
 
-### `npm install`
+Your .env file should live in the root of the project and contain values for these keys (available from your firebase console)
 
-You will need to run this first
+    REACT_APP_API_KEY=<your api key>
+    REACT_APP_AUTH_DOMAIN=<your app auth domain>
+    REACT_APP_DATABASE_URL=<your app database url>
+    REACT_APP_PROJECT_ID=<your project id>
+    REACT_APP_STORAGE_BUCKET=<your storage bucket>
+    REACT_APP_MESSAGING_SENDER_ID=<your messaging sender id>
+    REACT_APP_ID=<your app id>
 
-## `firebase init`
+## Add Firebase SDK
 
-### `npm start`
+[Guide](https://firebase.google.com/docs/web/setup) to setting up the sdk and tools you will need.
+
+## Install the packages from this repo
+
+### `$: npm install`
+
+All packages will be installed and that includes the firebase package.
+
+### `$: firebase init`
+
+This will set up the firebase integration
+
+## Run the app
+
+### `$: npm start`
 
 Should launch into a browser and will try and connect to firebase using your creds
 
-### `npm run build`
+## Build and deploy
+
+### `$: npm run build`
 
 Builds the app for production to the `build` folder.<br />
 It correctly bundles React in production mode and optimizes the build for the best performance.
