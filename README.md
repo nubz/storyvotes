@@ -33,7 +33,7 @@ The app will make a recommendation on the option voted for most frequently, or h
 
 # To run on your own Firebase project
 
-No doubt if you want to use this tool you will want to own the data. 
+No doubt, if you want to use this tool, you will want to own the data, in particular the email addresses of team owners. 
 
 Clone this repository, bearing in mind it will not have a firebase project to connect to automatically, you need to use your own!
 
@@ -41,9 +41,9 @@ Clone this repository, bearing in mind it will not have a firebase project to co
 
 ## Firebase credentials
 
-You will need your own Firebase credentials, populate a .env file with the creds from your Firebase console
+You will need your own Firebase credentials, populate a `.env` file with the creds from your Firebase console
 
-Your .env file should live in the root of the project and contain values for these keys (available from your firebase console)
+Your `.env` file should live in the root of the project and contain values for these keys (available from your firebase console)
 
     REACT_APP_API_KEY=<your api key>
     REACT_APP_AUTH_DOMAIN=<your app auth domain>
@@ -83,4 +83,4 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified, and the filenames include the hashes.<br />
 Your app is ready to be deployed!
 
-Either use `firebase deploy` or see the create-react-app section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Either use `firebase deploy` or see the `create-react-app` section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
