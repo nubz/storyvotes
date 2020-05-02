@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Segment, Card, Header, Message } from 'semantic-ui-react'
+import { Segment, Card, Header, Message, Icon, Button } from 'semantic-ui-react'
 import { compose } from 'recompose'
 import { withFirebase } from '../Firebase'
 import StoryCard from '../StoryCard'
@@ -10,6 +10,7 @@ const Team = props => {
   const [stories, setStories ] = useState([])
   const [ team, setTeam ] = useState(null)
   const [fullStories, setFullStories ] = useState([])
+  const [ copied, setCopied ] = useState(false)
   const teamId = props.match.params.id;
   const storyPath = `stories/${teamId}`
   const teamPath = `teams/${teamId}`
@@ -52,6 +53,16 @@ const Team = props => {
     }
   }, [firebase, storyPath, teamPath, teamId])
 
+  const copyUrlToClipboard = e => {
+    const textField = document.createElement('textarea')
+    textField.innerText = window.location.toString()
+    document.body.appendChild(textField)
+    textField.select()
+    document.execCommand('copy')
+    textField.remove()
+    setCopied(true)
+  }
+
   return (
     <Segment>
       {team ?
@@ -59,6 +70,10 @@ const Team = props => {
           <Header as='h2' dividing>
             Stories from {team.name}
           </Header>
+          <Button primary icon labelPosition='left' style={{opacity: copied ? '0.6' : '1'}} size={'mini'} onClick={copyUrlToClipboard}>
+            <Icon name='copy' />
+            {copied ? `Copied!` : `Copy url to share`}
+          </Button>
           {stories.length ?
             <Card.Group>
               {stories.map(s => (
