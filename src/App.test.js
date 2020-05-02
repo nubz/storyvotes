@@ -1,8 +1,9 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import './index.css';
-import App from './components/App';
-import Firebase, { FirebaseContext } from './components/Firebase';
+import React from 'react'
+import { render } from '@testing-library/react'
+import './index.css'
+import App from './components/App'
+import Firebase, { FirebaseContext } from './components/Firebase'
+
 test('renders story votes link', () => {
   const { getByText } = render(
     <FirebaseContext.Provider value={new Firebase()}>
