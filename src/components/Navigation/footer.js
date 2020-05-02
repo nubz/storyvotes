@@ -8,7 +8,7 @@ const authRoutes = [
   {
     route: 'STORY',
     label: 'Add a story',
-    color: 'grey',
+    color: '#0bc986',
     icon: 'plus circle'
   },
   {
@@ -42,7 +42,7 @@ const FooterNavigation = props => {
       { routes.length ? routes.map(r => (
           <Menu.Item key={r.route} className={'footer-item'}>
             <Link to={ROUTES[r.route]} style={{color: r.color}}>
-              <Icon name={r.icon} color={r.color}/>
+              <Icon name={r.icon} />
             </Link>
           </Menu.Item>
         )

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { AuthUserContext, withAuthorization } from '../Session'
-import { Button, List, Message, Segment } from 'semantic-ui-react'
+import { Button, List, Message, Segment, Confirm, Icon } from 'semantic-ui-react'
 import { compose } from 'recompose'
 import { withFirebase } from '../Firebase'
 import Utils from '../Utils'
@@ -19,6 +19,7 @@ const Teams = props => {
   const { authUser, firebase } = props
   const [ myTeams, setMyTeams ] = useState([])
   const [ host, setHost ] = useState('')
+  const [ confirm, setConfirm ] = useState(null)
   useEffect(() => {
     const teamListRef = firebase.db.ref('teams/')
     const teamListener = teamListRef
@@ -34,6 +35,22 @@ const Teams = props => {
       teamListRef.off("value", teamListener)
     }
   }, [ authUser, firebase ])
+
+  const confirmDelete = id => () => setConfirm(id)
+  const handleConfirm = fn => () => {
+    fn()
+    setConfirm(null)
+  }
+  const handleCancel = () => setConfirm(null)
+
+  const copyUrlToClipboard = (host, id) => e => {
+    const textField = document.createElement('textarea')
+    textField.innerText = `${host.protocol}//${host.host}/team-access/${id}`
+    document.body.appendChild(textField)
+    textField.select()
+    document.execCommand('copy')
+    textField.remove()
+  }
 
   const removeTeam = id => () => {
     firebase.db
@@ -53,29 +70,51 @@ const Teams = props => {
   return (
     <div>
       <Segment padded>
-        <h1>My teams</h1>
-        <p>Teams are a simple way to group stories, when adding stories you can choose which team to add them to and share the team link to expose only stories from that team.</p>
+        <h1>
+          My teams
+        </h1>
         <p>
-          <a href={ROUTES.NEW_TEAM}>Add a team</a>
+          <Link to={ROUTES.NEW_TEAM}><Icon name={'plus'} /> Add a team</Link>
+        </p>
+        <p>
+          Teams control access to stories for voters, grant voters access to teams by sharing the team access url with them.
+          Voters do not need to create an account to vote, they just need the team access url.
         </p>
         {myTeams.length ?
           <List divided relaxed inverted>
             {
               myTeams.map(team => (
                 <List.Item key={team.id}>
-                  <List.Content floated='right'>
-                    <Button icon={'delete'} size={'mini'} onClick={removeTeam(team.id)}>
-                    </Button>
-                  </List.Content>
-                  <List.Icon name='users' size='large' verticalAlign='middle' />
+                  <List.Icon name='users' size='huge' verticalAlign='middle' />
                   <List.Content>
                     <List.Header>
-                      <Link to={`team-access/${team.id}`}>
-                        {team.name}
-                      </Link>
+                      <h2>
+                        <Link to={`team-access/${team.id}`}>
+                          {team.name}
+                        </Link>
+                      </h2>
                     </List.Header>
                     <List.Description>
-                      {host && `${host.protocol}://${host.host}/team-access/${team.id}`}
+                      <p>
+                        {host && `${host.protocol}//${host.host}/team-access/${team.id}`}
+                      </p>
+                      <div style={{float: 'right'}}>
+                        <Button primary icon labelPosition='left' size={'mini'} onClick={copyUrlToClipboard(host, team.id)}>
+                          <Icon name='copy' />
+                          Copy url
+                        </Button>
+                        <Button negative icon labelPosition='left' size={'mini'} onClick={confirmDelete(team.id)}>
+                          <Icon name={'trash'} />
+                          Delete team
+                        </Button>
+                      </div>
+                      <Confirm
+                        open={confirm === team.id}
+                        header={`Permanently delete ${team.name}?`}
+                        content={`Confirm you want to delete ${team.name} and all related stories`}
+                        onCancel={handleCancel}
+                        onConfirm={handleConfirm(removeTeam(team.id))}
+                      />
                     </List.Description>
                   </List.Content>
                 </List.Item>
