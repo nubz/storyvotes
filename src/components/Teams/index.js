@@ -20,6 +20,7 @@ const Teams = props => {
   const [ myTeams, setMyTeams ] = useState([])
   const [ host, setHost ] = useState('')
   const [ confirm, setConfirm ] = useState(null)
+  const [ copied, setCopied ] = useState(null)
   useEffect(() => {
     const teamListRef = firebase.db.ref('teams/')
     const teamListener = teamListRef
@@ -50,6 +51,7 @@ const Teams = props => {
     textField.select()
     document.execCommand('copy')
     textField.remove()
+    setCopied(id)
   }
 
   const removeTeam = id => () => {
@@ -99,9 +101,9 @@ const Teams = props => {
                         {host && `${host.protocol}//${host.host}/team-access/${team.id}`}
                       </p>
                       <div style={{float: 'right'}}>
-                        <Button primary icon labelPosition='left' size={'mini'} onClick={copyUrlToClipboard(host, team.id)}>
+                        <Button primary icon labelPosition='left' style={{opacity: copied === team.id ? '0.6' : '1'}} size={'mini'} onClick={copyUrlToClipboard(host, team.id)}>
                           <Icon name='copy' />
-                          Copy url
+                          {copied && copied === team.id ? `Copied!` : `Copy url`}
                         </Button>
                         <Button negative icon labelPosition='left' size={'mini'} onClick={confirmDelete(team.id)}>
                           <Icon name={'trash'} />
