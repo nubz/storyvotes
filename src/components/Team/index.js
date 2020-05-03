@@ -11,7 +11,7 @@ const Team = props => {
   const [ team, setTeam ] = useState(null)
   const [fullStories, setFullStories ] = useState([])
   const [ copied, setCopied ] = useState(false)
-  const teamId = props.match.params.id;
+  const teamId = props.match.params.id
   const storyPath = `stories/${teamId}`
   const teamPath = `teams/${teamId}`
   useEffect(() => {

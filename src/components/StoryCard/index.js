@@ -1,5 +1,5 @@
 import { Button, Card } from 'semantic-ui-react'
-import Avatar from '../Avatar'
+import Avatar from '../Avatar/team.js'
 import React, { useEffect, useState } from 'react'
 import ScoreBoard from '../ScoreBoard'
 import Utils from '../Utils'
@@ -53,7 +53,7 @@ const StoryCard = props => {
       <Card color={'black'}>
         <Card.Content>
           <div style={{float: 'right'}}>
-            <Avatar size={'tiny'} id={story.owner} />
+            <Avatar size={'tiny'} id={story.teamId} />
           </div>
           <Card.Header>
             <Link style={{color: 'white'}} to={`/vote/${story.teamId}/${story.id}`}>{story.name}</Link>

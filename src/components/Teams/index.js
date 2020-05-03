@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { AuthUserContext, withAuthorization } from '../Session'
-import { Button, List, Message, Segment, Confirm, Icon } from 'semantic-ui-react'
+import { Button, Message, Segment, Confirm, Icon, Image, Card } from 'semantic-ui-react'
 import { compose } from 'recompose'
 import { withFirebase } from '../Firebase'
 import Utils from '../Utils'
 import * as ROUTES from '../../constants/routes'
 import { Link } from 'react-router-dom'
+import Avatar from '../Avatar'
 
 const TeamsView = props => (
   <AuthUserContext.Consumer>
@@ -83,46 +84,48 @@ const Teams = props => {
           Voters do not need to create an account to vote, they just need the team access url.
         </p>
         {myTeams.length ?
-          <List divided relaxed inverted>
+          <Card.Group>
             {
               myTeams.map(team => (
-                <List.Item key={team.id}>
-                  <List.Icon name='users' size='huge' verticalAlign='middle' />
-                  <List.Content>
-                    <List.Header>
-                      <h2>
-                        <Link to={`team-access/${team.id}`}>
-                          {team.name}
-                        </Link>
-                      </h2>
-                    </List.Header>
-                    <List.Description>
-                      <p>
-                        {host && `${host.protocol}//${host.host}/team-access/${team.id}`}
-                      </p>
+                <Card key={team.id}>
+                  <Card.Content>
+                    {team.poster ?
+                      <Image size={'tiny'} floated={'right'} src={team.poster} />
+                      :
                       <div style={{float: 'right'}}>
-                        <Button primary icon labelPosition='left' style={{opacity: copied === team.id ? '0.6' : '1'}} size={'mini'} onClick={copyUrlToClipboard(host, team.id)}>
-                          <Icon name='copy' />
-                          {copied && copied === team.id ? `Copied!` : `Copy url`}
-                        </Button>
-                        <Button negative icon labelPosition='left' size={'mini'} onClick={confirmDelete(team.id)}>
-                          <Icon name={'trash'} />
-                          Delete team
-                        </Button>
+                        <Avatar size={'tiny'} id={team.owner} />
                       </div>
-                      <Confirm
-                        open={confirm === team.id}
-                        header={`Permanently delete ${team.name}?`}
-                        content={`Confirm you want to delete ${team.name} and all related stories`}
-                        onCancel={handleCancel}
-                        onConfirm={handleConfirm(removeTeam(team.id))}
-                      />
-                    </List.Description>
-                  </List.Content>
-                </List.Item>
+                    }
+                    <Card.Header>
+                      <Link to={`team-access/${team.id}`}>
+                        {team.name}
+                      </Link>
+                    </Card.Header>
+                    <Card.Meta>
+                      <Link to={`teams/${team.id}`}><Icon name={'edit'} /> Edit</Link>
+                    </Card.Meta>
+                  </Card.Content>
+                  <Card.Content extra>
+                    <Button primary icon labelPosition='left' style={{opacity: copied === team.id ? '0.6' : '1'}} size={'mini'} onClick={copyUrlToClipboard(host, team.id)}>
+                      <Icon name='copy' />
+                      {copied && copied === team.id ? `Copied!` : `Copy url`}
+                    </Button>
+                    <Button negative icon labelPosition='left' size={'mini'} onClick={confirmDelete(team.id)}>
+                      <Icon name={'trash'} />
+                      Delete
+                    </Button>
+                    <Confirm
+                      open={confirm === team.id}
+                      header={`Permanently delete ${team.name}?`}
+                      content={`Confirm you want to delete ${team.name} and all related stories`}
+                      onCancel={handleCancel}
+                      onConfirm={handleConfirm(removeTeam(team.id))}
+                    />
+                  </Card.Content>
+                </Card>
               ))
             }
-          </List>
+          </Card.Group>
         :
           <Message>
             <Message.Header>You have no teams</Message.Header>

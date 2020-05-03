@@ -245,6 +245,10 @@ main {
   width: 320px;
 }
 
+.uploader-wrapper {
+  margin: 1em 0;
+}
+
 @media only screen and (min-width: 992px) {
   #root .ui.container.page {
     padding: 2em 1em;
