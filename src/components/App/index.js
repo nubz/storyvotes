@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Navigation from '../Navigation';
 import Footer from '../Navigation/footer'
@@ -21,7 +21,7 @@ import { Container } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css';
 
 const App = () => (
-  <Router onUpdate={() => window.scrollTo(0, 0)}>
+  <Router onUpdate={() => { window.scrollTo(0, 0) }}>
     <Navigation />
     <Container>
       <Route exact path={ROUTES.LANDING} component={LandingPage}/>
@@ -39,6 +39,6 @@ const App = () => (
     </Container>
     <Footer />
   </Router>
-);
+)
 
 export default withAuthentication(App);

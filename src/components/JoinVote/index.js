@@ -14,11 +14,10 @@ const JoinForm = props => {
     setter(event.target.value);
   }
   const invalidNickName = nickName.length < 2
-  const join = e => {
+  const join = s => e => {
     e.preventDefault()
     if (invalidNickName) {
       const uncontrolled = input.current.value
-      console.log('using uncontrolled value ' + uncontrolled)
       if (uncontrolled.length < 2) {
         return false
       }
@@ -32,10 +31,10 @@ const JoinForm = props => {
     newJoined.push(uniqueNickName)
     setCookie(cookieName, uniqueNickName, { path: '/' })
     firebase.db
-      .ref('stories/' + story.teamId + '/' + story.id)
+      .ref('stories/' + s.teamId + '/' + s.id)
       .update({joined: newJoined})
       .then(() => {
-        history.push(`/vote/${story.teamId}/${story.id}`)
+        history.push(`/vote/${s.teamId}/${s.id}`)
       }, err => console.log(err))
   }
   return (
@@ -47,7 +46,8 @@ const JoinForm = props => {
           </a>
         </h2>
         :
-        <form onSubmit={join}>
+        story && story.id &&
+        <form onSubmit={join(story)}>
           <Input
             iconPosition="left"
             ref={input}

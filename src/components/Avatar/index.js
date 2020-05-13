@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { compose } from 'recompose'
 import { withFirebase } from '../Firebase'
+import AvatarBase from './base'
 
 const Avatar = props => {
   const { firebase, id, size } = props
@@ -22,20 +22,8 @@ const Avatar = props => {
   const avatarImg = profile && profile.avatar ? profile.avatar : '/assets/images/default-avatar.png'
 
   return (
-    <div
-      className={`avatarImage ${size}`}
-      style={{
-        backgroundImage: `url(${avatarImg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        border: '2px solid white'
-      }}
-     />
+    <AvatarBase size={size} avatarImg={avatarImg} />
   )
-};
+}
 
-const AvatarImage = compose(
-  withFirebase,
-)(Avatar)
-
-export default AvatarImage
+export default withFirebase(Avatar)

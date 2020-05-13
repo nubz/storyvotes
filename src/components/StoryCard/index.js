@@ -76,7 +76,10 @@ const StoryCard = props => {
         {story.howManyPlayers > joined.length &&
           <Card.Content extra>
             {authUser && joined.length > 0 &&
-              <Button primary style={{marginBottom: '1em'}} onClick={closeVoting(submissions)}>Close off registration</Button>}
+              <Button primary style={{marginBottom: '1em'}} onClick={closeVoting(submissions)}>
+                Close off registration
+              </Button>
+            }
             <JoinVote
               story={story}
               players={joined}

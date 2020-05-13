@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { AuthUserContext, withAuthorization } from '../Session'
-import { Button, Message, Segment, Confirm, Icon, Image, Card } from 'semantic-ui-react'
+import { Button, Message, Segment, Confirm, Icon, Card } from 'semantic-ui-react'
 import { compose } from 'recompose'
 import { withFirebase } from '../Firebase'
 import Utils from '../Utils'
 import * as ROUTES from '../../constants/routes'
 import { Link } from 'react-router-dom'
 import Avatar from '../Avatar'
+import AvatarBase from '../Avatar/base'
 
 const TeamsView = props => (
   <AuthUserContext.Consumer>
@@ -89,30 +90,45 @@ const Teams = props => {
               myTeams.map(team => (
                 <Card key={team.id}>
                   <Card.Content>
-                    {team.poster ?
-                      <Image size={'tiny'} floated={'right'} src={team.poster} />
-                      :
-                      <div style={{float: 'right'}}>
+                    <div style={{float: 'right'}}>
+                      {team.poster ?
+                        <AvatarBase size={'tiny'} avatarImg={team.poster} />
+                        :
                         <Avatar size={'tiny'} id={team.owner} />
-                      </div>
-                    }
+                      }
+                    </div>
                     <Card.Header>
                       <Link to={`team-access/${team.id}`}>
                         {team.name}
                       </Link>
                     </Card.Header>
-                    <Card.Meta>
-                      <Link to={`teams/${team.id}`}><Icon name={'edit'} /> Edit</Link>
-                    </Card.Meta>
+                    <Card.Description>
+                      <p>
+                        <Link to={`teams/${team.id}`}>
+                          <Icon name={'edit'} /> Edit
+                        </Link>
+                      </p>
+                    </Card.Description>
                   </Card.Content>
                   <Card.Content extra>
-                    <Button primary icon labelPosition='left' style={{opacity: copied === team.id ? '0.6' : '1'}} size={'mini'} onClick={copyUrlToClipboard(host, team.id)}>
+                    <Button
+                      primary
+                      icon
+                      labelPosition='left'
+                      style={{opacity: copied === team.id ? '0.6' : '1'}}
+                      size={'mini'}
+                      onClick={copyUrlToClipboard(host, team.id)}>
                       <Icon name='copy' />
-                      {copied && copied === team.id ? `Copied!` : `Copy url`}
+                      {copied && copied === team.id ? `Copied!` : `Copy access url`}
                     </Button>
-                    <Button negative icon labelPosition='left' size={'mini'} onClick={confirmDelete(team.id)}>
+                    <Button
+                      negative
+                      icon
+                      labelPosition='left'
+                      size={'mini'}
+                      onClick={confirmDelete(team.id)}>
                       <Icon name={'trash'} />
-                      Delete
+                      Delete team
                     </Button>
                     <Confirm
                       open={confirm === team.id}

@@ -121,7 +121,7 @@ main {
   position: fixed;
   width: 30px;
   height: 24px;
-  right: 35px;
+  right: 10px;
   top: 10px;
 }
 
@@ -224,6 +224,21 @@ main {
 
 .avatarImage {
   border-radius: 50%;
+  height: 60px;
+  width: 60px;
+}
+
+.avatarImage.inline {
+  height: 90px;
+  width: 90px;
+  display: inline-block;
+  margin: 0 2em 0 0;
+  vertical-align: middle;
+}
+
+.avatarImage.inline + h1 {
+  display: inline-block;
+  margin: 0;
 }
 
 .avatarImage.tiny {
@@ -243,6 +258,11 @@ main {
 
 #root .ui.card, #root .ui.cards>.card {
   width: 320px;
+}
+
+.team-header {
+  position: relative;
+  margin-bottom: 2em;
 }
 
 .uploader-wrapper {

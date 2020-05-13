@@ -3,10 +3,10 @@ import { slide as Menu } from 'react-burger-menu'
 import * as ROUTES from '../../constants/routes'
 import { Link } from 'react-router-dom'
 import SignOutButton from '../SignOut'
-import Avatar from '../Avatar'
+import Avatar from '../Avatar/index'
 import { Icon } from 'semantic-ui-react'
 
-const SidebarContext = React.createContext();
+const SidebarContext = React.createContext()
 
 const SidebarProvider = (props) => {
   const [menuOpenState, setMenuOpenState] = useState(false)

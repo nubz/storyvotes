@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Segment, Card, Header, Message, Icon, Button } from 'semantic-ui-react'
+import { Segment, Card, Header, Message, Icon } from 'semantic-ui-react'
 import { compose } from 'recompose'
 import { withFirebase } from '../Firebase'
 import StoryCard from '../StoryCard'
 import Utils from '../Utils'
+import AvatarBase from '../Avatar/base'
 
 const Team = props => {
   const { firebase } = props
@@ -67,13 +68,13 @@ const Team = props => {
     <Segment>
       {team ?
         <>
-          <Header as='h2' dividing>
-            Stories from {team.name}
-          </Header>
-          <Button primary icon labelPosition='left' style={{opacity: copied ? '0.6' : '1'}} size={'mini'} onClick={copyUrlToClipboard}>
-            <Icon name='copy' />
-            {copied ? `Copied!` : `Copy url to share`}
-          </Button>
+          <div className={'team-header'}>
+            <AvatarBase size={'inline'} avatarImg={team.poster} />
+            <Header as='h1'>
+              {team.name}
+              <Icon name='copy outline' size={'mini'} onClick={copyUrlToClipboard} style={{cursor: 'pointer', paddingLeft: '1em', fontSize: '80%', verticalAlign: 'top', opacity: copied ? '0.6' : '1'}} />
+            </Header>
+          </div>
           {stories.length ?
             <Card.Group>
               {stories.map(s => (
@@ -115,8 +116,6 @@ const Team = props => {
           </p>
         </Message>
       }
-
-
     </Segment>
   );
 }
