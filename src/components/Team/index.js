@@ -72,7 +72,19 @@ const Team = props => {
             <AvatarBase size={'inline'} avatarImg={team.poster} />
             <Header as='h1'>
               {team.name}
-              <Icon name='copy outline' size={'mini'} onClick={copyUrlToClipboard} style={{cursor: 'pointer', paddingLeft: '1em', fontSize: '80%', verticalAlign: 'top', opacity: copied ? '0.6' : '1'}} />
+              <Icon
+                name='copy outline'
+                title={copied ? 'team access url copied to clipboard' : 'copy the team access url to share'}
+                size={'mini'}
+                onClick={copyUrlToClipboard}
+                style={{
+                  cursor: 'pointer',
+                  paddingLeft: '1em', 
+                  fontSize: '80%',
+                  verticalAlign: 'top',
+                  opacity: copied ? '0.6' : '1'
+                }}
+              />
             </Header>
           </div>
           {stories.length ?
