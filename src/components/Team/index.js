@@ -79,7 +79,7 @@ const Team = props => {
                 onClick={copyUrlToClipboard}
                 style={{
                   cursor: 'pointer',
-                  paddingLeft: '1em', 
+                  paddingLeft: '1em',
                   fontSize: '80%',
                   verticalAlign: 'top',
                   opacity: copied ? '0.6' : '1'

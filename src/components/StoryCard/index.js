@@ -82,7 +82,6 @@ const StoryCard = props => {
             }
             <JoinVote
               story={story}
-              players={joined}
               firebase={firebase}/>
           </Card.Content>
           }
