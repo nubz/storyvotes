@@ -102,6 +102,7 @@ a.logo {
 
 #root .ui.statistic>.label, #root .ui.statistics .statistic>.label {
   color: var(--color-label);
+  padding: 0 8px;
 }
 
 #root .ui.huge.statistic {
