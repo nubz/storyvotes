@@ -1,12 +1,36 @@
 {
   "rules": {
-    ".read": true,
-    ".write": true,
     "stories": {
-      ".indexOn": ["owner"]
+      ".read": true,
+      "$teamId": {
+        "$storyId": {
+          ".write": "auth.uid != null && (newData.child('owner').val() === auth.uid || auth.uid === root.child('owner').val())",
+          "joined": {
+            ".write": true
+          },
+          "finished": {
+            ".write": true
+          }
+        }
+      }
     },
     "teams": {
-      ".indexOn": ["owner"]
+      ".indexOn": ["owner"],
+      ".read": true,
+      ".write": "auth.uid != null",
+      "$uid": {
+        ".write": "root.child('owner').val() === auth.uid"
+      }
+    },
+    "profiles": {
+      "$uid": {
+        ".read": true,
+        ".write": "auth.uid != null && auth.uid === $uid"
+      }
+    },
+    "submissions": {
+      ".read": true,
+      ".write": true
     }
   }
 }

@@ -68,11 +68,9 @@ const Vote = props => {
   }, [firebase, cookies, storyId, storyPath, submissionsPath])
 
   const answer = choice => async () => {
+    await firebase.db.ref(submissionsPath).child(cookies[`${storyId}-name`]).set(choice)
     setHasVoted(true)
-    const oldSubmissions = submissions || {}
-    const newSubmissions = {...oldSubmissions, [cookies[`${storyId}-name`]]:choice}
-    await firebase.db.ref(submissionsPath).update(newSubmissions)
-    if (Object.keys(newSubmissions).length === story.howManyPlayers) {
+    if (Object.keys(submissions).length === story.howManyPlayers) {
       firebase.db.ref(storyPath).update({finished: firebase.database.ServerValue.TIMESTAMP})
     }
   }
