@@ -23,6 +23,7 @@
       }
     },
     "profiles": {
+      ".read": true,
       "$uid": {
         ".read": true,
         ".write": "auth.uid != null && auth.uid === $uid",
