@@ -22,10 +22,12 @@ const HomePage = props => {
     const storyListRef = firebase.db.ref('stories/')
     const storyListener = storyListRef
       .on("value", snapshot => {
+        const storedStories = []
         snapshot.forEach(childSnapshot => {
-          setMyStories(Utils.firebaseToArrayWithKey(childSnapshot.val())
+          storedStories.push.apply(storedStories, Utils.firebaseToArrayWithKey(childSnapshot.val())
             .filter(s => s.owner === authUser.uid))
         })
+        setMyStories(storedStories)
       })
 
     return () => {
