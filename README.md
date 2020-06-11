@@ -1,9 +1,7 @@
-This is a side project of mine built to run with Firebase Realtime Database.
+This is a side project of mine built with React and Semantic-UI to run with Firebase Realtime Database.
 
 Set up to solve the problem of having a free way of remotely voting on stories without seeing each others votes before 
-voting is complete. Previous solutions included video conference countdowns to entering a score into a spreadsheet or 
-slack channel with quite mixed results. Everyone could usually see other votes before casting their own, much against 
-the scrum principle. 
+voting is complete. Previous solutions, tried since Covid-19 lockdown began, included video conference countdowns to entering a score into a spreadsheet or slack channel with quite mixed results. Voters could often see how others had voted before casting their own, much against the scrum principle.
 
 # Overview
 
