@@ -58,6 +58,9 @@ const Vote = props => {
         const s = snapshot.val()
         setSubmissions(s)
         setMostFrequent(findMostFrequent(s))
+        if (s && Object.keys(s).length === story.howManyPlayers) {
+          storyRef.update({finished: firebase.database.ServerValue.TIMESTAMP})
+        }
       })
 
 
@@ -65,14 +68,11 @@ const Vote = props => {
       storyRef.off("value", storyListener)
       submissionsRef.off("value", submissionsListener)
     }
-  }, [firebase, cookies, storyId, storyPath, submissionsPath])
+  }, [firebase, cookies, storyId, storyPath, submissionsPath, story.howManyPlayers])
 
   const answer = choice => async () => {
     await firebase.db.ref(submissionsPath).child(cookies[`${storyId}-name`]).set(choice)
     setHasVoted(true)
-    if (Object.keys(submissions).length === story.howManyPlayers) {
-      firebase.db.ref(storyPath).update({finished: firebase.database.ServerValue.TIMESTAMP})
-    }
   }
 
   const generateOptions = (mode = 'Days') => {
