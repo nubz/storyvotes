@@ -4,7 +4,7 @@
       ".read": true,
       "$teamId": {
         "$storyId": {
-          ".write": "auth.uid != null && (newData.child('owner').val() === auth.uid || auth.uid === root.child('owner').val())",
+          ".write": "auth.uid != null",
           "joined": {
             ".write": true
           },
@@ -25,7 +25,10 @@
     "profiles": {
       "$uid": {
         ".read": true,
-        ".write": "auth.uid != null && auth.uid === $uid"
+        ".write": "auth.uid != null && auth.uid === $uid",
+        "email": {
+          ".read": "auth.uid != null && auth.uid === $uid"
+        }
       }
     },
     "submissions": {

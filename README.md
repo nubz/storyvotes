@@ -1,23 +1,29 @@
 This is a side project of mine built to run with Firebase Realtime Database.
 
-Set up to solve the problem of having a way of remotely voting on stories without seeing each others votes before voting is complete.
-
-[See my hosted version](https://storyvotes.web.app)
+Set up to solve the problem of having a free way of remotely voting on stories without seeing each others votes before 
+voting is complete. Previous solutions included video conference countdowns to entering a score into a spreadsheet or 
+slack channel with quite mixed results. Everyone could usually see other votes before casting their own, much against 
+the scrum principle. 
 
 # Overview
 
+## Usage
+
 Create an account to be able to add teams and stories to vote on. 
 
-Create a team
+Create a team with team name and avatar
 
-Create stories by simply naming them (e.g. scrum ticket name or number), 
-setting max number of voters, set voting mode (Fibonacci, Days, T-Shirt or YesNo)
+Create stories by choosing which of your teams it belongs to, naming them (e.g. scrum ticket name or number), 
+setting max number of voters and set the voting mode (Fibonacci, Days, T-Shirt or YesNo)
 
 Share the team access link (shown in your teams list or the url on your team page) with voters, 
-voters do not need to create an account to vote.
+voters do not need to create an account to vote - the link contains the access code
 
-Voters can register to vote on any story they can see that is open for registration. Voters cannot see stories from
-teams they do not have access to. Voters can have access to many teams.
+Voters:
+
+* can register to vote on any story they can see that is open for registration
+* cannot see stories from teams they do not have access to
+* can have access to many teams.
 
 Once a voter has registered they are able to vote in secret straight away.
 
@@ -27,23 +33,28 @@ The owner of the story can close registration at any point after at least one vo
 
 Voters will not see each other's votes until all votes have been cast.
 
-Anyone with team access can see the voting in progress, and the final votes cast.
+Anyone with team access can see who has voted (but not how they voted), and once all voters have voted then see the 
+final votes cast.
 
 The app will make a recommendation on the option voted for most frequently, or highlight joint candidates if it's a tie.
 
 # To run on your own Firebase project
 
-No doubt, if you want to use this tool, you will want to own the data, in particular the email addresses of team owners. 
+No doubt, if you want to use this tool, you will want to own the data, domain, and in particular the email addresses of 
+team owners. 
 
-Clone this repository, bearing in mind it will not have a firebase project to connect to automatically, you need to use your own!
+Clone this repository, bearing in mind it will not have a firebase project to connect to automatically, you need to use 
+your own!
 
-[Create a firebase project](https://firebase.google.com/) with realtime database, storage (for avatars) and, optionally, hosting
+[Create a firebase project](https://firebase.google.com/) with realtime database, storage (for avatars) and, optionally, 
+hosting
 
 ## Firebase credentials
 
 You will need your own Firebase credentials, populate a `.env` file with the creds from your Firebase console
 
-Your `.env` file should live in the root of the project and contain values for these keys (available from your firebase console)
+Your `.env` file should live in the root of the project and contain values for these keys (available from your firebase 
+console)
 
     REACT_APP_API_KEY=<your api key>
     REACT_APP_AUTH_DOMAIN=<your app auth domain>
@@ -65,7 +76,8 @@ All packages will be installed and that includes the firebase package.
 
 ### `$: firebase init`
 
-This will set up the firebase integration
+This will set up the firebase integration, choose `build` as the target directory to publish, and when challenged about 
+any existing `rules` files choose `not to overwrite` so that you can use the ones in this repo.
 
 ## Run the app
 
@@ -83,4 +95,5 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified, and the filenames include the hashes.<br />
 Your app is ready to be deployed!
 
-Either use `firebase deploy` or see the `create-react-app` section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Either use `firebase deploy` or see the `create-react-app` section about 
+[deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
