@@ -4,11 +4,12 @@ import './index.css'
 import App from './components/App'
 import Firebase, { FirebaseContext } from './components/Firebase'
 
+// TODO: firebase testing - mocks? test db?
 test('renders story votes link', () => {
   const { getByText } = render(
     <FirebaseContext.Provider value={new Firebase()}>
       <App />
     </FirebaseContext.Provider>)
-  const linkElement = getByText(/StoryVotes/i);
-  expect(linkElement).toBeInTheDocument();
-});
+  const linkElement = getByText(/StoryVotes/i)
+  expect(linkElement).toBeInTheDocument()
+})
